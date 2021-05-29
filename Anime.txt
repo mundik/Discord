@@ -1,0 +1,21 @@
+Strike_Blood 10 12 
+Beautiful_World 6 12 
+Shimoneta 2 12 
+Bokuben2 0 15 
+Koikomo 9 9 Mon 151_15 
+Higehiro 8 8 Mon 151_17 
+Slime 2 8 Tue 152_18 
+Osamake 7 7 Wed 153_15 
+Full_Dive 8 8 Wed 153_17 
+Seven_Deadly_Sins 14 20 Wed 153_20 
+Zombieland2 0 8 Thu 154_18 
+Demon_Lord 8 8 Thu 154_21 
+Link 1 6 Fri 155_6 
+Spider 0 20 Fri 155_16 
+Iruma 6 7 Sat 156_14 
+Killing_Slimes 7 8 Sat 156_16 
+Nagatoro 7 8 Sat 156_18 
+Vivy 9 9 Sat 149_19 
+86 7 7 Sat 149_19 
+Revengers 7 7 Sat 149_21 
+Combatants 8 8 Sun 150_14 
