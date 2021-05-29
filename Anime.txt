@@ -15,7 +15,7 @@ Spider 0 20 Fri 155_16
 Iruma 6 7 Sat 156_14 
 Killing_Slimes 7 8 Sat 156_16 
 Nagatoro 7 8 Sat 156_18 
-Vivy 9 9 Sat 149_19 
-86 7 7 Sat 149_19 
-Revengers 7 7 Sat 149_21 
+Vivy 9 10 Sat 156_19 
+86 7 8 Sat 156_19 
+Revengers 7 8 Sat 156_21 
 Combatants 8 8 Sun 150_14 
