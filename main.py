@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 import threading
 import Server
 import Workout
@@ -131,6 +132,17 @@ async def anime(ctx, *args):
         await ctx.send(Anime.new_episode())
     else:
         await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update)")
+
+
+@bot.command()
+async def log(ctx, *args):
+    try:
+        name = args[0]
+    except IndexError:
+        ctx.send("Need file to input")
+    else:
+        file = discord.File(f"./{name}")
+        await ctx.send(file=file, content=" ")
 
 
 """
