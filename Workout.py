@@ -37,7 +37,7 @@ def substract(option, num):
     ret = ""
     for i in data:
         if i['option'] == option:
-            i['value'] -= num
+            i['value'] -= int(num)
             ret = i['value']
             break
     file_write(data)
