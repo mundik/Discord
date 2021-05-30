@@ -1,12 +1,9 @@
 from discord.ext import commands
 import discord
-import threading
-import Server
 import Workout
 import Anime
 import System
 
-# TOKEN = 'NzM1ODg1ODk2OTQ3MDczMDc1.XxmxUg.6-Bd3aKYITMiVsCxIAx7wU2YGa0' old from minecraft server bot
 TOKEN = 'NzMzOTE5NTQ2MTg0MDQwNTA5.XxKJ1w.fkLthMofrT3g7DSGBWB59BGrYKo'
 GUILD = '508295043153526816'
 bot = commands.Bot(command_prefix='!')
@@ -16,45 +13,6 @@ bot = commands.Bot(command_prefix='!')
 async def on_ready():
     print('Bot is ready')
     Workout.daily_check()
-
-
-@bot.command()
-async def status(ctx, *args):
-    typ = ""
-    if len(args) == 1:
-        typ = args[0]
-    if typ == "":
-        stand_run, response = Server.probe("S")
-        await ctx.send(response)
-        test_run, response = Server.probe("T")
-        await ctx.send(response)
-        if not (test_run or stand_run):
-            await ctx.send("!S - Start standart server\n!T - Start testing server")
-    else:
-        run, response = Server.probe(typ)
-        await ctx.send(response)
-
-
-@bot.command()
-async def T(ctx):
-    stat = Server.probe("T")[0]
-    if stat == 1:
-        await ctx.send('Testing server already running')
-    else:
-        await ctx.send('Starting server.....')
-        thread_test = threading.Thread(target=Server.start("T"), daemon=True)
-        thread_test.start()
-
-
-@bot.command()
-async def S(ctx):
-    stat = Server.probe("S")[0]
-    if stat == 1:
-        await ctx.send('Standart server already running')
-    else:
-        await ctx.send('Starting server.....')
-        thread_stan = threading.Thread(target=Server.start("S"), daemon=True)
-        thread_stan.start()
 
 
 @bot.command()
@@ -145,12 +103,11 @@ async def log(ctx, *args):
         await ctx.send(file=file, content=" ")
 
 
-"""
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send("Command not found")
     else:
         await ctx.send(str(error))
-"""
+
 bot.run(TOKEN)
