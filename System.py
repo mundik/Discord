@@ -1,5 +1,6 @@
 import datetime
-filename = "Sysinfo.txt"
+import Git_update as Git
+file = "Sysinfo.txt"
 
 
 def now():
@@ -24,9 +25,9 @@ def datework():
 
 
 def dateread():
-    with open(filename, "r+") as file:
-        workout_date = file.readline()
-        anime_date = file.readline()
+    with open(file, "r+") as _file:
+        workout_date = _file.readline()
+        anime_date = _file.readline()
     return workout_date, anime_date
 
 
@@ -37,11 +38,12 @@ def strp(date):
 def datewrite(typ, date):
     if typ == "w":
         date1 = dateanime()
-        with open(filename, "w") as file:
-            file.write(str("Workout: " + str(date) + "\n"))
-            file.write(str("Anime: " + str(date1) + "\n"))
+        with open(file, "w") as _file:
+            _file.write(str("Workout: " + str(date) + "\n"))
+            _file.write(str("Anime: " + str(date1) + "\n"))
     elif typ == "a":
         date1 = datework()
-        with open(filename, "w+") as file:
-            file.write(str("Workout: " + str(date1) + "\n"))
-            file.write(str("Anime: " + str(date) + "\n"))
+        with open(file, "w+") as _file:
+            _file.write(str("Workout: " + str(date1) + "\n"))
+            _file.write(str("Anime: " + str(date) + "\n"))
+    Git.new_commit(file)

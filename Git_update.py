@@ -1,26 +1,10 @@
-"""
-import base64
-from github import Github
-
-
-# First create a Github instance:
-
-# using an access token
-g = Github("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")
-
-
-# Then play with your Github objects:
-repo = g.get_user().get_repo("Discord")
-contents = repo.get_contents("")
-print(contents)
-"""
 from github import Github
 
 g = Github("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")
 repo = g.get_user().get_repo("Discord")
 
 
-def new_commit(file_path):
+def new_commit(file):
     all_files = []
     contents = repo.get_contents("")
     while contents:
@@ -30,12 +14,9 @@ def new_commit(file_path):
         else:
             file = file_content
             all_files.append(str(file).replace('ContentFile(path="', '').replace('")', ''))
-
-    with open(file_path, 'r') as file:
-        content = file.read()
-
-    # Upload to github
-    git_file = file_path
+    with open(file, 'r') as _file:
+        content = _file.read()
+    git_file = file
     if git_file in all_files:
         contents = repo.get_contents(git_file)
         repo.update_file(contents.path, "committing files", content, contents.sha, branch="main")
@@ -43,5 +24,3 @@ def new_commit(file_path):
     else:
         repo.create_file(git_file, "committing files", content, branch="main")
         print(git_file + ' CREATED')
-
-new_commit('Git_update.py')

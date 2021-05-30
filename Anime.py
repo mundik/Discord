@@ -1,14 +1,15 @@
 from datetime import timedelta
 import System
+import Git_update as Git
 
-filepath = "Anime.txt"
+file = "Anime.txt"
 
 
 def read_file():
     data_list = []
     anime_list = []
-    with open("Anime.txt", "r+") as file:
-        for i in file:
+    with open(file, "r+") as _file:
+        for i in _file:
             name, rest = i[:-1].split(" ", maxsplit=1)
             temp = rest.split(" ")
             if len(temp) == 5:
@@ -21,11 +22,12 @@ def read_file():
 
 
 def write_file(data_list):
-    with open("Anime.txt", "w") as file:
+    with open(file, "w") as _file:
         for i in data_list:
             for j in i.values():
-                file.write(str(j) + " ")
-            file.write("\n")
+                _file.write(str(j) + " ")
+            _file.write("\n")
+    Git.new_commit(file)
 
 
 def watched(name, ep):

@@ -1,21 +1,23 @@
 import System
+import Git_update as Git
 
-filepath = "Workout.txt"
+file = "Workout.txt"
 
 
 def file_read():
     data = []
-    with open(filepath, "r+") as file:
-        for i in file:
+    with open(file, "r+") as _file:
+        for i in _file:
             option, value = i.strip().split(":")
             data.append({'option': option, 'value': int(value)})
     return data
 
 
 def file_write(data):
-    with open(filepath, "w") as file:
+    with open(file, "w") as _file:
         for i in data:
-            file.write(f"{i['option']}:{i['value']}\n")
+            _file.write(f"{i['option']}:{i['value']}\n")
+    Git.new_commit(file)
 
 
 def daily_check():
