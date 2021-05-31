@@ -12,7 +12,7 @@ def watched(name, add):
         if typ == "ongoing":
             sql = f'''UPDATE anime_ongoing SET current_ep = {ep} WHERE name = '{name}' '''
         elif typ == "finished":
-            sql = f'''UPDATE anime_finished SET ep = {ep} WHERE name = '{name}' '''
+            sql = f'''UPDATE anime_finished SET current_ep = {ep} WHERE name = '{name}' '''
         else:
             return "error"
         Database.command(sql)
