@@ -52,7 +52,7 @@ def get_anime(name):
     if typ == "ongoing":
         sql = f'''SELECT "current_ep" FROM anime_ongoing as Anime where Anime.name = '{name}' '''
     elif typ == "finished":
-        sql = f'''SELECT "ep" FROM anime_finished as Anime where Anime.name = '{name}' '''
+        sql = f'''SELECT "current_ep" FROM anime_finished as Anime where Anime.name = '{name}' '''
     else:
         return "", ""
     cur.execute(sql)
