@@ -54,7 +54,7 @@ def get_anime(name):
     elif typ == "finished":
         sql = f'''SELECT "ep" FROM anime_finished as Anime where Anime.name = '{name}' '''
     else:
-        return
+        return "", ""
     cur.execute(sql)
     ret = cur.fetchall()
     disconnect(conn)
