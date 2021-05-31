@@ -1,7 +1,7 @@
 from discord.ext import commands
 import discord
 import Workout
-import Anime
+import Anime_database as Anime
 import System
 
 TOKEN = 'NzMzOTE5NTQ2MTg0MDQwNTA5.XxKJ1w.fkLthMofrT3g7DSGBWB59BGrYKo'
@@ -102,12 +102,12 @@ async def log(ctx, *args):
         file = discord.File(f"./{name}")
         await ctx.send(file=file, content=" ")
 
-
+"""
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send("Command not found")
     else:
         await ctx.send(str(error))
-
+"""
 bot.run(TOKEN)

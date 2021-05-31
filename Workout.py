@@ -1,51 +1,34 @@
 import System
-import Git_update as Git
-
-file = "Workout.txt"
-
-
-def file_read():
-    data = []
-    with open(file, "r+") as _file:
-        for i in _file:
-            option, value = i.strip().split(":")
-            data.append({'option': option, 'value': int(value)})
-    return data
-
-
-def file_write(data):
-    with open(file, "w") as _file:
-        for i in data:
-            _file.write(f"{i['option']}:{i['value']}\n")
-    Git.new_commit(file)
+import Database
 
 
 def daily_check():
-    today = System.today().timetuple().tm_yday
-    data = file_read()
-    date = System.datework().timetuple().tm_yday
+    today = System.today()
+    data = Database.command(f'''SELECT * FROM workout ''')
+    date = System.datework()
+    delta = (today-date).days
     for i in data:
-        option = i['option']
-        if option == 'push':
-            i['value'] += (today - int(date)) * 20
-        elif option == 'run':
-            i['value'] += (today - int(date)) * 250
-    file_write(data)
-    System.datewrite("w", System.today())
+        if i[0] == 'push':
+            Database.command(f'''UPDATE workout SET value = {i[1] + delta * 20} WHERE name = 'push' ''')
+        elif i[0] == 'run':
+            Database.command(f'''UPDATE workout SET value = {i[1] + delta * 250} WHERE name = 'run' ''')
+    System.datewrite("workout", delta)
 
 
 def substract(option, num):
-    data = file_read()
+    data = Database.command(f'''SELECT * FROM workout ''')
     ret = ""
     for i in data:
-        if i['option'] == option:
-            i['value'] -= int(num)
-            ret = i['value']
+        if i[0] == option:
+            Database.command(f'''UPDATE workout SET value = {i[1] - int(num)} WHERE name = '{option}' ''')
+            ret = i[1] - num
             break
-    file_write(data)
     return ret
 
 
 def status():
-    remain = file_read()
-    return remain
+    ret = ""
+    data = Database.command(f'''SELECT * FROM workout ''')
+    for i in data:
+        ret += f'{i[0]}: {i[1]}'
+    return ret
