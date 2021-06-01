@@ -40,14 +40,14 @@ async def workout(ctx, *args):
                 await ctx.send(f"Substracted {num} points from {option}.\nNew value: {remain}")
     elif func == "status" or func == "stat":
         num = Workout.status()
-        await ctx.send(str("Remaining workout points: " + str(num)))
+        await ctx.send(f"Remaining workout points:\n {num}")
     else:
         await ctx.send("Wrong function(available: status,sub)")
 
 
 @bot.command()
 async def today(ctx):
-    await ctx.send(str(System.today()) + ", " + str(System.today().timetuple().tm_yday))
+    await ctx.send(f"{System.today()}, {System.today().timetuple().tm_yday}")
 
 
 @bot.command()
@@ -71,12 +71,12 @@ async def anime(ctx, *args):
         if len(args) == 4:
             await ctx.send(Anime.new_anime(args[1], args[2], args[3]))
         else:
-            await ctx.send("Missing parameters (syntax: add Name Num_of_act_ep Num_of_ep)")
+            await ctx.send("Missing parameters (syntax: add Name Act_ep Num_of_ep)")
     elif func == "add_going":
-        if len(args) == 6:
-            await ctx.send(Anime.new_anime_going(args[1], args[2], args[3], args[4], args[5]))
+        if len(args) == 7:
+            await ctx.send(Anime.new_anime_going(args[1], args[2], args[3], args[4], args[5], args[6]))
         else:
-            await ctx.send("Missing parameters (syntax: add Name Num_of_act_ep Last_ep_num Day Last_updated)")
+            await ctx.send("Missing parameters (syntax: add Name Act_ep Num_ep Day Last_updated, Update_hour)")
     elif func == "finished" or func == "f":
         if len(args) == 2:
             await ctx.send(Anime.delete_anime(args[1]))
@@ -84,7 +84,7 @@ async def anime(ctx, *args):
             await ctx.send("Missing parameters (syntax: finished Name)")
     elif func == "status" or func == "stat":
         await ctx.send(Anime.status())
-    elif func == "waiting":
+    elif func == "waiting" or func == "wait":
         await ctx.send(Anime.waiting())
     elif func == "update" or func == "u":
         await ctx.send(Anime.new_episode())

@@ -4,3 +4,5 @@ __pycache__
 .heroku-netrc
 *.txt
 *.iml
+Anime.py.old
+Sysinfo.txt

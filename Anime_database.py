@@ -19,13 +19,12 @@ def watched(name, add):
         return f"Anime {name} updated."
 
 
-def new_anime_going(name, ep, last, day, update):
+def new_anime_going(name, ep, last, day, update_date, update_time):
     sql = f'''SELECT * FROM anime_list as Anime where Anime.name = '{name}' '''
     find = Database.command(sql)
     if len(find) != 0:
         return "Anime already on list"
     else:
-        update_date, update_time = update.split("_")
         sql = f'''INSERT INTO anime_ongoing(name, current_ep, latest_ep, day, update_date, update_time) 
     VALUES('{name}', {ep}, {last}, '{day}', {update_date}, {update_time})'''
         Database.command(sql)

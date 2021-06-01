@@ -30,5 +30,5 @@ def status():
     ret = ""
     data = Database.command(f'''SELECT * FROM workout ''')
     for i in data:
-        ret += f'{i[0]}: {i[1]}'
+        ret += f'{i[0]}: {i[1]}\n'
     return ret
