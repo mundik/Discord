@@ -90,6 +90,11 @@ def waiting():
     return ret
 
 
+def change_time(name, hour):
+    Database.command(f'''UPDATE anime_ongoing SET update_time = {hour} WHERE name = '{name}' ''')
+    return f"Anime {name} update time set to {hour}:00"
+
+
 def new_episode():
     last_time = System.dateanime()
     today = System.today()

@@ -88,8 +88,13 @@ async def anime(ctx, *args):
         await ctx.send(Anime.waiting())
     elif func == "update" or func == "u":
         await ctx.send(Anime.new_episode())
+    elif func == "change":
+        if len(args) == 3:
+            await ctx.send(Anime.change_time(args[1], args[2]))
+        else:
+            await ctx.send("Missing parameters (syntax: change Name Hour)")
     else:
-        await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update)")
+        await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update, change)")
 
 
 @bot.command()
