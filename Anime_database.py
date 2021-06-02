@@ -112,10 +112,11 @@ def new_episode():
                     ret += f"Anime {i[0]} will have new episode within hour.\n"
                     continue
             if i[4] <= today.timetuple().tm_yday:
+                diff = i[2]
                 while i[4] <= today.timetuple().tm_yday:
                     i[2] += 1
                     i[4] += 7
-                ret += f"Anime {i[0]} have {i[2] - i[1]} new episode.\n"
+                ret += f"Anime {i[0]} have {i[2] - diff} new episode.\n"
                 Database.command(
                     f'''UPDATE anime_ongoing SET latest_ep = {i[2]}, update_date = {i[4]} WHERE name = '{i[0]}' ''')
     ret = ret.replace("_", " ")
