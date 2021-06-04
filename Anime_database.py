@@ -20,37 +20,36 @@ def watched(name, add):
 
 
 def new_anime_going(name, ep, last, day, update_date, update_time):
-    sql = f'''SELECT * FROM anime_list as Anime where Anime.name = '{name}' '''
-    find = Database.command(sql)
+    find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name = '{name}' ''')
     if len(find) != 0:
         return "Anime already on list"
     else:
-        sql = f'''INSERT INTO anime_ongoing(name, current_ep, latest_ep, day, update_date, update_time) 
-    VALUES('{name}', {ep}, {last}, '{day}', {update_date}, {update_time})'''
-        Database.command(sql)
-        sql = f'''INSERT INTO anime_list(name, type) VALUES('{name}', 'ongoing')'''
-        Database.command(sql)
+        Database.command(f'''INSERT INTO anime_ongoing(name, current_ep, latest_ep, day, update_date, update_time) 
+    VALUES('{name}', {ep}, {last}, '{day}', {update_date}, {update_time})''')
+        Database.command(f'''INSERT INTO anime_list(name, type) VALUES('{name}', 'ongoing')''')
         return f"Anime {name} succesfully added."
 
 
 def new_anime(name, ep, max_ep):
-    sql = f'''SELECT * FROM anime_list as Anime where Anime.name = '{name}' '''
-    find = Database.command(sql)
+    find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name = '{name}' ''')
     if len(find) != 0:
         return "Anime already on list"
     else:
-        sql = f'''INSERT INTO anime_finished(name, current_ep, episodes) VALUES('{name}', {ep}, {max_ep})'''
-        Database.command(sql)
-        sql = f'''INSERT INTO anime_list(name, type) VALUES('{name}', 'finished')'''
-        Database.command(sql)
+        Database.command(f'''INSERT INTO anime_finished(name, current_ep, episodes) VALUES('{name}', {ep}, {max_ep})''')
+        Database.command(f'''INSERT INTO anime_list(name, type) VALUES('{name}', 'finished')''')
         return f"Anime {name} succesfully added."
 
 
 def delete_anime(name):
-    sql = f'''SELECT * FROM anime_list as Anime where Anime.name = '{name}' '''
-    find = Database.command(sql)
-    if len(find) != 0:
-        sql = f'''DELETE FROM anime_list as Anime where Anime.name = '{name}' '''
+    typ = Database.command(f'''SELECT type FROM anime_list as Anime where Anime.name = '{name}' ''')
+    if len(typ) != 0:
+        Database.command(f'''DELETE FROM anime_list as Anime where Anime.name = '{name}' ''')
+        if typ == "ongoing":
+            sql = f'''DELETE FROM anime_ongoing as Anime where Anime.name = '{name}' '''
+        elif typ == "finished":
+            sql = f'''DELETE FROM anime_finished as Anime where Anime.name = '{name}' '''
+        else:
+            return "error"
         Database.command(sql)
         return f"Anime {name} was removed from watchlist."
     else:
