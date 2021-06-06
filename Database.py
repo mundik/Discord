@@ -62,12 +62,15 @@ def get_anime(name):
 
 
 def command(sql):
-    conn, cur = connect()
-    cur.execute(sql)
+    conn = ""
     try:
+        conn, cur = connect()
+        cur.execute(sql)
         ret = cur.fetchall()
     except psycopg2.ProgrammingError:
         disconnect(conn)
+    except psycopg2.OperationalError:
+        exit("Cannot connect to database.")
     else:
         disconnect(conn)
         return ret

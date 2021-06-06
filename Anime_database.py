@@ -104,7 +104,7 @@ def new_episode():
                 if System.now().minute > 30:
                     diff -= 1
                 if diff == 0:
-                    append = "fAnime {i[0]} will have new episode within hour"
+                    ret += f"Anime {i[0]} will have new episode within hour"
                     continue
                 append = "s" if diff > 1 else ""
                 ret += f"Anime {i[0]} will have new episode in {diff} hour{append}.\n"
