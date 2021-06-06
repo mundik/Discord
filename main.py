@@ -63,25 +63,20 @@ async def anime(ctx, *args):
         await ctx.send("Available functions: watched, add, add_going, finished, status, waiting, update")
         return
     if func == "watched" or func == "w":
-        if len(args) == 3:
-            await ctx.send(Anime.watched(args[1], args[2]))
-        else:
-            await ctx.send("Missing parameters (syntax: watched Name Num_of_ep)")
+        data = Anime.watched(args[1], args[2]) if len(args) == 3 else \
+            "Missing parameters (syntax: watched Name Num_of_ep)"
+        await ctx.send(data)
     elif func == "add":
-        if len(args) == 4:
-            await ctx.send(Anime.new_anime(args[1], args[2], args[3]))
-        else:
-            await ctx.send("Missing parameters (syntax: add Name Act_ep Num_of_ep)")
+        data = Anime.new_anime(args[1], args[2], args[3]) if len(args) == 4 else \
+            "Missing parameters (syntax: add Name Act_ep Num_of_ep)"
+        await ctx.send(data)
     elif func == "add_going":
-        if len(args) == 7:
-            await ctx.send(Anime.new_anime_going(args[1], args[2], args[3], args[4], args[5], args[6]))
-        else:
-            await ctx.send("Missing parameters (syntax: add Name Act_ep Num_ep Day Last_updated, Update_hour)")
+        data = Anime.new_anime_going(args[1], args[2], args[3], args[4], args[5], args[6]) if len(args) == 7 else \
+            "Missing parameters (syntax: add Name Act_ep Num_ep Day Last_updated, Update_hour)"
+        await ctx.send(data)
     elif func == "finished" or func == "f":
-        if len(args) == 2:
-            await ctx.send(Anime.delete_anime(args[1]))
-        else:
-            await ctx.send("Missing parameters (syntax: finished Name)")
+        data = Anime.delete_anime(args[1]) if len(args) == 2 else "Missing parameters (syntax: finished Name)"
+        await ctx.send(data)
     elif func == "status" or func == "stat":
         await ctx.send(Anime.status())
     elif func == "waiting" or func == "wait":
@@ -89,10 +84,9 @@ async def anime(ctx, *args):
     elif func == "update" or func == "u":
         await ctx.send(Anime.new_episode())
     elif func == "change":
-        if len(args) == 3:
-            await ctx.send(Anime.change_time(args[1], args[2]))
-        else:
-            await ctx.send("Missing parameters (syntax: change Name Hour)")
+        data = Anime.change_time(args[1], args[2]) if len(args) == 3 else \
+            "Missing parameters (syntax: change Name Hour)"
+        await ctx.send(data)
     else:
         await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update, change)")
 
