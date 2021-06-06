@@ -78,11 +78,17 @@ async def anime(ctx, *args):
         data = Anime.delete_anime(args[1]) if len(args) == 2 else "Missing parameters (syntax: finished Name)"
         await ctx.send(data)
     elif func == "status" or func == "stat":
-        await ctx.send(Anime.status())
+        data = Anime.status()
+        data = "No anime in database" if data == "" else data
+        await ctx.send(data)
     elif func == "waiting" or func == "wait":
-        await ctx.send(Anime.waiting())
+        data = Anime.waiting()
+        data = "Nothing on watchlist" if data == "" else data
+        await ctx.send(data)
     elif func == "update" or func == "u":
-        await ctx.send(Anime.new_episode())
+        data = Anime.new_episode()
+        data = "Nothing to update" if data == "" else data
+        await ctx.send(data)
     elif func == "change":
         data = Anime.change_time(args[1], args[2]) if len(args) == 3 else \
             "Missing parameters (syntax: change Name Hour)"
