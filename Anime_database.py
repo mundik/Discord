@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import *
 import System
 import Database
 
@@ -99,6 +99,7 @@ def new_episode():
         data_list = Database.command(f'''SELECT * FROM anime_ongoing WHERE day = '{day}' ''')
         for i in data_list:
             i = list(i)
+            i[4] = datetime.strptime(i[4], "%Y-%m-%d").date()
             if i[4] == today:
                 diff = i[5] - System.now().hour
                 if System.now().minute > 30:
@@ -106,14 +107,15 @@ def new_episode():
                 if diff == 0:
                     ret += f"Anime {i[0]} will have new episode within hour"
                     continue
-                append = "s" if diff > 1 else ""
-                ret += f"Anime {i[0]} will have new episode in {diff} hour{append}.\n"
-                continue
+                elif diff > 0:
+                    append = "s" if diff > 1 else ""
+                    ret += f"Anime {i[0]} will have new episode in {diff} hour{append}.\n"
+                    continue
             if i[4] <= today:
                 diff = i[2]
                 while i[4] <= today:
                     i[2] += 1
-                    i[4] += 7
+                    i[4] += timedelta(days=7)
                 diff = i[2] - diff
                 append = "s" if diff > 1 else ""
                 ret += f"Anime {i[0]} have {diff} new episode{append}.\n"
