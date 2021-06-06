@@ -24,9 +24,7 @@ def new_anime_going(name, ep, last, day, update_date, update_time):
     if len(find) != 0:
         return "Anime already on list"
     else:
-        Database.command(f'''INSERT INTO anime_ongoing(name, current_ep, latest_ep, day, update_date, update_time) 
-    VALUES('{name}', {ep}, {last}, '{day}', {update_date}, {update_time})''')
-        Database.command(f'''INSERT INTO anime_list(name, type) VALUES('{name}', 'ongoing')''')
+        Database.add_ongoing_anime(name, ep, last, day, update_date, update_time)
         return f"Anime {name} succesfully added."
 
 
@@ -35,15 +33,13 @@ def new_anime(name, ep, max_ep):
     if len(find) != 0:
         return "Anime already on list"
     else:
-        Database.command(f'''INSERT INTO anime_finished(name, current_ep, episodes) VALUES('{name}', {ep}, {max_ep})''')
-        Database.command(f'''INSERT INTO anime_list(name, type) VALUES('{name}', 'finished')''')
+        Database.add_finished_anime(name, ep, max_ep)
         return f"Anime {name} succesfully added."
 
 
 def delete_anime(name):
     typ = Database.command(f'''SELECT type FROM anime_list as Anime where Anime.name = '{name}' ''')
     if len(typ) != 0:
-        Database.command(f'''DELETE FROM anime_list as Anime where Anime.name = '{name}' ''')
         if typ == "ongoing":
             sql = f'''DELETE FROM anime_ongoing as Anime where Anime.name = '{name}' '''
         elif typ == "finished":
@@ -51,6 +47,7 @@ def delete_anime(name):
         else:
             return "error"
         Database.command(sql)
+        Database.command(f'''DELETE FROM anime_list as Anime where Anime.name = '{name}' ''')
         return f"Anime {name} was removed from watchlist."
     else:
         return "Anime not found."
@@ -61,7 +58,7 @@ def status():
     data_list = Database.command(f'''SELECT * FROM anime_finished''')
     for i in data_list:
         ret += f"Name: {i[0]}, Episode: {i[1]} out of {i[2]} \n"
-    data_list = Database.command(f'''SELECT * FROM anime_ongoing''')
+    data_list = Database.command(f'''SELECT * FROM anime_ongoing ORDER BY update_date, update_time''')
     for i in data_list:
         ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3]} at {i[5]}:00\n"
     ret = ret.replace("_", " ")
@@ -81,10 +78,8 @@ def waiting():
     ret = ""
     for i in data_list:
         diff = i[2] - i[1]
-        if diff > 1:
-            ret += f"Anime {i[0]} have {diff} unwatched episodes.\n"
-        elif diff == 1:
-            ret += f"Anime {i[0]} have {diff} unwatched episode.\n"
+        append = "s" if diff > 1 else ""
+        ret += f"Anime {i[0]} have {diff} unwatched episode{append}.\n"
     ret = ret.replace("_", " ")
     return ret
 
@@ -101,28 +96,29 @@ def new_episode():
     ret = ""
     for j in range(0, delta.days + 1):
         day = (last_time + timedelta(days=j)).strftime("%a")
-        data_list = Database.command(
-            f'''SELECT * FROM anime_ongoing WHERE day = '{day}' ''')
+        data_list = Database.command(f'''SELECT * FROM anime_ongoing WHERE day = '{day}' ''')
         for i in data_list:
             i = list(i)
-            if i[4] == today.timetuple().tm_yday:
+            if i[4] == today:
                 diff = i[5] - System.now().hour
                 if System.now().minute > 30:
                     diff -= 1
-                if diff > 0:
-                    ret += f"Anime {i[0]} will have new episode in {diff} hours.\n"
+                if diff == 0:
+                    append = "fAnime {i[0]} will have new episode within hour"
                     continue
-                elif diff == 0:
-                    ret += f"Anime {i[0]} will have new episode within hour.\n"
-                    continue
-            if i[4] <= today.timetuple().tm_yday:
+                append = "s" if diff > 1 else ""
+                ret += f"Anime {i[0]} will have new episode in {diff} hour{append}.\n"
+                continue
+            if i[4] <= today:
                 diff = i[2]
-                while i[4] <= today.timetuple().tm_yday:
+                while i[4] <= today:
                     i[2] += 1
                     i[4] += 7
-                ret += f"Anime {i[0]} have {i[2] - diff} new episode.\n"
+                diff = i[2] - diff
+                append = "s" if diff > 1 else ""
+                ret += f"Anime {i[0]} have {diff} new episode{append}.\n"
                 Database.command(
-                    f'''UPDATE anime_ongoing SET latest_ep = {i[2]}, update_date = {i[4]} WHERE name = '{i[0]}' ''')
+                    f'''UPDATE anime_ongoing SET latest_ep = {i[2]}, update_date = '{i[4]}' WHERE name = '{i[0]}' ''')
     ret = ret.replace("_", " ")
     System.datewrite("anime", delta.days)
     return ret

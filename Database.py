@@ -73,13 +73,18 @@ def command(sql):
         return ret
 
 
-def get_anime_update():
+def add_note(name, time, text, repeat):
     conn, cur = connect()
-    sql = f'''SELECT * FROM anime_ongoing as Anime '''
+    sql = f'''INSERT INTO notes(name, time, repeat, text) VALUES('{name}', '{time}', {repeat}, '{text}')'''
     cur.execute(sql)
-    ret = cur.fetchall()
     disconnect(conn)
-    return ret
+
+
+def add_repeat_note(name, time, text, interval, repeat):
+    conn, cur = connect()
+    sql = f'''INSERT INTO notes(name,time,repeat,every,text) VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
+    cur.execute(sql)
+    disconnect(conn)
 
 
 def connect():

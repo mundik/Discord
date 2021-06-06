@@ -1,13 +1,13 @@
-import datetime
+from datetime import datetime, date, timedelta
 import Database
 
 
 def now():
-    return datetime.datetime.now()
+    return datetime.now()
 
 
 def today():
-    return strp(str(datetime.date.today()))
+    return strp(str(date.today()))
 
 
 def dateanime():
@@ -20,13 +20,31 @@ def datework():
     return workout_date
 
 
-def strp(date):
-    return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+def strp(input_date):
+    return datetime.strptime(input_date, '%Y-%m-%d').date()
 
 
 def datewrite(typ, add):
     sql = f'''SELECT date from System_date WHERE type='{typ}' '''
-    date = (Database.command(sql)[0][0])
-    add = datetime.timedelta(days=add)
-    date += add
-    Database.command(f'''UPDATE System_date SET date='{date}' WHERE type='{typ}' ''')
+    get_date = (Database.command(sql)[0][0])
+    add = timedelta(days=add)
+    get_date += add
+    Database.command(f'''UPDATE System_date SET date='{get_date}' WHERE type='{typ}' ''')
+
+
+def date_to_human(input_time):
+    seconds = int(input_time)
+    periods = [
+        ('month', 60 * 60 * 24 * 30),
+        ('day', 60 * 60 * 24),
+        ('hour', 60 * 60),
+        ('minute', 60),
+        ('second', 1)]
+    strings = []
+    for period_name, period_seconds in periods:
+        if seconds > period_seconds:
+            period_value, seconds = divmod(seconds, period_seconds)
+            has_s = 's' if period_value > 1 else ''
+            strings.append(f"{period_value} {period_name}{has_s}")
+
+    return ", ".join(strings)
