@@ -18,13 +18,12 @@ def check():
 def substract(option, num):
     check()
     data = Database.command(f'''SELECT * FROM workout ''')
-    ret = ""
     for i in data:
         if i[0] == option:
             diff = i[1] - int(num)
             Database.command(f'''UPDATE workout SET value = {diff} WHERE name = '{option}' ''')
-            break
-    return ret
+            return diff
+    return ""
 
 
 def status():
