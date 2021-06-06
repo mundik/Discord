@@ -2,7 +2,7 @@ import System
 import Database
 
 
-def daily_check():
+def check():
     today = System.today()
     data = Database.command(f'''SELECT * FROM workout ''')
     date = System.datework()
@@ -16,17 +16,19 @@ def daily_check():
 
 
 def substract(option, num):
+    check()
     data = Database.command(f'''SELECT * FROM workout ''')
     ret = ""
     for i in data:
         if i[0] == option:
-            Database.command(f'''UPDATE workout SET value = {i[1] - int(num)} WHERE name = '{option}' ''')
-            ret = i[1] - num
+            diff = i[1] - int(num)
+            Database.command(f'''UPDATE workout SET value = {diff} WHERE name = '{option}' ''')
             break
     return ret
 
 
 def status():
+    check()
     ret = ""
     data = Database.command(f'''SELECT * FROM workout ''')
     for i in data:

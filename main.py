@@ -12,7 +12,7 @@ bot = commands.Bot(command_prefix='!')
 @bot.event
 async def on_ready():
     print('Bot is ready')
-    Workout.daily_check()
+    Workout.check()
 
 
 @bot.command()
