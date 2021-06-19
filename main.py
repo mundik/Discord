@@ -3,16 +3,21 @@ import discord
 import Workout
 import Anime_database as Anime
 import System
+import Notes
+import time
 
 TOKEN = 'NzMzOTE5NTQ2MTg0MDQwNTA5.XxKJ1w.fkLthMofrT3g7DSGBWB59BGrYKo'
 GUILD = '508295043153526816'
-bot = commands.Bot(command_prefix='!')
+intents = discord.Intents.default()
+intents.members = True
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 @bot.event
 async def on_ready():
     print('Bot is ready')
     Workout.check()
+    Notes.clear_due()
 
 
 @bot.command()
@@ -106,6 +111,43 @@ async def log(ctx, *args):
     else:
         file = discord.File(f"./{name}")
         await ctx.send(file=file, content=" ")
+
+
+@bot.command()
+async def n(ctx, *args):
+    await note(ctx, *args)
+
+
+@bot.command()
+async def note(ctx, *args):
+    try:
+        func = args[0]
+    except IndexError:
+        await ctx.send("Available functions: add")
+        return
+    if func == "add" or func == "a":
+        name = args[1]
+        date = args[2]
+        text = ' '.join(args[3:])
+        data = Notes.add_note(name, date, text) if len(args) > 3 else \
+            "Missing parameters (syntax: note add name date text *interval*)"
+        if isinstance(data, str):
+            await ctx.send(data)
+            return
+        else:
+            await ctx.send(data[0])
+            bot.loop.create_task(mention(ctx, name, text, data[1]))
+    if func == "delete" or func == "d":
+        data = Notes.delete_note(args[1]) if len(args) == 2 else "Missing parameters (syntax: note delete name)"
+        await ctx.send(data)
+
+
+async def mention(ctx, name, text, sleep_time):
+    time.sleep(sleep_time)
+    respond = f"{name.replace('_', ' ')}\n{text}\n{ctx.author.mention}"
+    await ctx.send(respond)
+    Notes.delete_note(name)
+
 
 """
 @bot.event

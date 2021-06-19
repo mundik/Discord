@@ -1,20 +1,31 @@
 import Database
-import Notifier
 from datetime import datetime
+import System
 
 
-def add_note(name, input_time, text, *interval):
+def add_note(name, input_time, text):
+    time = datetime.strptime(input_time, '%d.%m.%Y_%H:%M')
+    if time < System.now():
+        return f"Unable to create notification for past event."
+    else:
+        delta = time - System.now()
+        sec = delta.seconds
     note = Database.command(f'''SELECT * FROM notes WHERE name='{name}' ''')
     if len(note) != 0:
         return f'Note {name} already exists.'
     else:
-        time = datetime.strptime(input_time, '%d.%m.%Y %H:%M')
-        try:
-            Database.add_repeat_note(name, time, text, interval[0], repeat='TRUE')
-        except IndexError:
-            Database.add_note(name, time, text, repeat='FALSE')
-        ret = Notifier.add_notify(name, time, text)
-        return f'Note {name} added\n{ret}'
+        Database.add_note(name, time, text, repeat='FALSE')
+        return f'Note {name} added\nNotification for note {name} has been set...\nRemaining time: ' \
+               f'{System.date_to_human(sec)}', sec
 
 
-print(add_note('A', '6.6.2021 14:50', 'test'))
+def delete_note(name):
+    Database.command(f'''DELETE FROM notes where name='{name}' ''')
+    return f"Note {name} successfully deleted"
+
+
+def clear_due():
+    notes = Database.command('''SELECT * FROM notes''')
+    for i in notes:
+        if datetime.strptime(i[1], '%Y-%m-%d %H:%M:%S') < System.now():
+            Database.command(f'''DELETE FROM notes where name='{i[0]}' ''')

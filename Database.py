@@ -85,7 +85,7 @@ def add_note(name, time, text, repeat):
 
 def add_repeat_note(name, time, text, interval, repeat):
     conn, cur = connect()
-    sql = f'''INSERT INTO notes(name,time,repeat,every,text) VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
+    sql = f'''INSERT INTO notes(name, time, repeat, every,text)VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
     cur.execute(sql)
     disconnect(conn)
 
