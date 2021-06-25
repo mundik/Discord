@@ -91,7 +91,7 @@ async def anime(ctx, *args):
         data = "Nothing on watchlist" if data == "" else data
         await ctx.send(data)
     elif func == "update" or func == "u":
-        data = Anime.new_episode()
+        data = Anime.update()
         data = "Nothing to update" if data == "" else data
         await ctx.send(data)
     elif func == "change":

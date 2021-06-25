@@ -46,5 +46,16 @@ def date_to_human(input_time):
             period_value, seconds = divmod(seconds, period_seconds)
             has_s = 's' if period_value > 1 else ''
             strings.append(f"{period_value} {period_name}{has_s}")
-
     return ", ".join(strings)
+
+
+def days_to_human(string):
+    string = string.replace("_", " ")
+    string = string.replace("Mon", "Monday")
+    string = string.replace("Tue", "Tuesday")
+    string = string.replace("Wed", "Wednesday")
+    string = string.replace("Thu", "Thursday")
+    string = string.replace("Fri", "Friday")
+    string = string.replace("Sat", "Saturday")
+    string = string.replace("Sun", "Sunday")
+    return string

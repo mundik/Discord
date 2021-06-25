@@ -8,13 +8,15 @@ def watched(name, add):
     if len(ep) == 0:
         return f"Anime {name} not found."
     else:
+        if isinstance(add, int):
+            return f"{add} is not a number."
         ep = ep[0][0] + int(add)
         if typ == "ongoing":
             sql = f'''UPDATE anime_ongoing SET current_ep = {ep} WHERE name LIKE '{name}' '''
         elif typ == "finished":
             sql = f'''UPDATE anime_finished SET current_ep = {ep} WHERE name LIKE '{name}' '''
         else:
-            return "error"
+            return "Database Error."
         Database.command(sql)
         return f"Anime {name} updated."
 
@@ -22,7 +24,7 @@ def watched(name, add):
 def new_anime_going(name, ep, last, day, update_date, update_time):
     find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
-        return "Anime already on list"
+        return "Anime already on list."
     else:
         Database.add_ongoing_anime(name, ep, last, day, update_date, update_time)
         return f"Anime {name} succesfully added."
@@ -31,7 +33,7 @@ def new_anime_going(name, ep, last, day, update_date, update_time):
 def new_anime(name, ep, max_ep):
     find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
-        return "Anime already on list"
+        return "Anime already on list."
     else:
         Database.add_finished_anime(name, ep, max_ep)
         return f"Anime {name} succesfully added."
@@ -39,18 +41,17 @@ def new_anime(name, ep, max_ep):
 
 def delete_anime(name):
     typ = Database.command(f'''SELECT type FROM anime_list as Anime where Anime.name LIKE '{name}' ''')[0][0]
-    if len(typ) != 0:
-        if typ == "ongoing":
-            sql = f'''DELETE FROM anime_ongoing as Anime where Anime.name LIKE '{name}' '''
-        elif typ == "finished":
-            sql = f'''DELETE FROM anime_finished as Anime where Anime.name LIKE '{name}' '''
-        else:
-            return "error"
-        Database.command(sql)
-        Database.command(f'''DELETE FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
-        return f"Anime {name} was removed from watchlist."
-    else:
+    if len(typ) == 0:
         return "Anime not found."
+    if typ == "ongoing":
+        sql = f'''DELETE FROM anime_ongoing as Anime where Anime.name LIKE '{name}' '''
+    elif typ == "finished":
+        sql = f'''DELETE FROM anime_finished as Anime where Anime.name LIKE '{name}' '''
+    else:
+        return "Database Error"
+    Database.command(sql)
+    Database.command(f'''DELETE FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
+    return f"Anime {name} was removed from watchlist."
 
 
 def status():
@@ -61,15 +62,7 @@ def status():
     data_list = Database.command(f'''SELECT * FROM anime_ongoing ORDER BY update_date, update_time''')
     for i in data_list:
         ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3]} at {i[5]}:00\n"
-    ret = ret.replace("_", " ")
-    ret = ret.replace("Mon", "Monday")
-    ret = ret.replace("Tue", "Tuesday")
-    ret = ret.replace("Wed", "Wednesday")
-    ret = ret.replace("Thu", "Thursday")
-    ret = ret.replace("Fri", "Friday")
-    ret = ret.replace("Sat", "Saturday")
-    ret = ret.replace("Sun", "Sunday")
-    return ret
+    return System.days_to_human(ret)
 
 
 def waiting():
@@ -80,8 +73,7 @@ def waiting():
         diff = i[2] - i[1]
         append = "s" if diff > 1 else ""
         ret += f"Anime {i[0]} have {diff} unwatched episode{append}.\n"
-    ret = ret.replace("_", " ")
-    return ret
+    return System.days_to_human(ret)
 
 
 def change_time(name, hour):
@@ -89,7 +81,7 @@ def change_time(name, hour):
     return f"Anime {name} update time set to {hour}:00"
 
 
-def new_episode():
+def update():
     last_time = System.dateanime()
     today = System.today()
     delta = today - last_time
