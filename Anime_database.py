@@ -4,6 +4,7 @@ import Database
 
 
 def watched(name, add):
+    name = " ".join(name)
     ep, typ = Database.get_anime(name)
     if len(ep) == 0:
         return f"Anime {name} not found."
@@ -22,6 +23,7 @@ def watched(name, add):
 
 
 def new_anime_going(name, ep, last, day, update_date, update_time):
+    name = " ".join(name)
     find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
         return "Anime already on list."
@@ -31,6 +33,7 @@ def new_anime_going(name, ep, last, day, update_date, update_time):
 
 
 def new_anime(name, ep, max_ep):
+    name = " ".join(name)
     find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
         return "Anime already on list."
@@ -39,7 +42,8 @@ def new_anime(name, ep, max_ep):
         return f"Anime {name} succesfully added."
 
 
-def delete_anime(name):
+def finished(name):
+    name = " ".join(name)
     typ = Database.command(f'''SELECT type FROM anime_list as Anime where Anime.name LIKE '{name}' ''')[0][0]
     if len(typ) == 0:
         return "Anime not found."
@@ -77,6 +81,7 @@ def waiting():
 
 
 def change_time(name, hour):
+    name = " ".join(name)
     Database.command(f'''UPDATE anime_ongoing SET update_time = {hour} WHERE name LIKE '{name}' ''')
     return f"Anime {name} update time set to {hour}:00"
 
