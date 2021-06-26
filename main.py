@@ -142,6 +142,15 @@ async def note(ctx, *args):
         await ctx.send(data)
 
 
+@bot.command()
+async def clear(ctx, order, number):
+    await ctx.send("Deleting messages...")
+    if order == "u" or order == "U":
+        await ctx.channel.purge(limit=int(number)+2, oldest_first=True)
+    else:
+        await ctx.channel.purge(limit=int(number)+2)
+
+
 async def mention(ctx, name, text, sleep_time):
     time.sleep(sleep_time)
     respond = f"{name.replace('_', ' ')}\n{text}\n{ctx.author.mention}"
