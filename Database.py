@@ -3,7 +3,7 @@ import psycopg2
 
 def add_finished_anime(name, curr_ep, ep):
     conn, cur = connect()
-    sql = f'''INSERT INTO anime_finished(name, current_ep, episodes) VALUES('{name}', {curr_ep}, {ep})'''
+    sql = f'''INSERT INTO "anime_finished"(name, current_ep, episodes) VALUES('{name}', {curr_ep}, {ep})'''
     try:
         cur.execute(sql)
         add_anime_list(cur, name, typ="finished")
@@ -15,7 +15,7 @@ def add_finished_anime(name, curr_ep, ep):
 
 def add_ongoing_anime(name, ep, last, day, update_date, update_time):
     conn, cur = connect()
-    sql = f'''INSERT INTO anime_ongoing(name, current_ep, latest_ep, day, update_date, update_time)
+    sql = f'''INSERT INTO "anime_ongoing"(name, current_ep, latest_ep, day, update_date, update_time)
 VALUES('{name}', {ep}, {last}, '{day}', {update_date}, {update_time})'''
     try:
         cur.execute(sql)
@@ -27,13 +27,13 @@ VALUES('{name}', {ep}, {last}, '{day}', {update_date}, {update_time})'''
 
 
 def add_anime_list(cur, name, typ):
-    sql = f'''INSERT INTO anime_list(name, type) VALUES('{name}', '{typ}')'''
+    sql = f'''INSERT INTO "anime_list"(name, type) VALUES('{name}', '{typ}')'''
     cur.execute(sql)
 
 
 def get_anime_type(name):
     conn, cur = connect()
-    sql = f'''SELECT type FROM anime_list as Anime where Anime.name = '{name}' '''
+    sql = f'''SELECT type FROM "anime_list" as Anime where Anime.name = '{name}' '''
     try:
         cur.execute(sql)
         ret = cur.fetchall()
@@ -50,9 +50,9 @@ def get_anime(name):
     conn, cur = connect()
     typ = get_anime_type(name)
     if typ == "ongoing":
-        sql = f'''SELECT "current_ep" FROM anime_ongoing as Anime where Anime.name = '{name}' '''
+        sql = f'''SELECT "current_ep" FROM "anime_ongoing" as Anime where Anime.name = '{name}' '''
     elif typ == "finished":
-        sql = f'''SELECT "current_ep" FROM anime_finished as Anime where Anime.name = '{name}' '''
+        sql = f'''SELECT "current_ep" FROM "anime_finished" as Anime where Anime.name = '{name}' '''
     else:
         return "", ""
     cur.execute(sql)
@@ -78,24 +78,24 @@ def command(sql):
 
 def add_note(name, time, text, repeat):
     conn, cur = connect()
-    sql = f'''INSERT INTO notes(name, time, repeat, text) VALUES('{name}', '{time}', {repeat}, '{text}')'''
+    sql = f'''INSERT INTO "notes"(name, time, repeat, text) VALUES('{name}', '{time}', {repeat}, '{text}')'''
     cur.execute(sql)
     disconnect(conn)
 
 
 def add_repeat_note(name, time, text, interval, repeat):
     conn, cur = connect()
-    sql = f'''INSERT INTO notes(name, time, repeat, every,text)VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
+    sql = f'''INSERT INTO "notes"(name, time, repeat, every,text)VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
     cur.execute(sql)
     disconnect(conn)
 
 
 def connect():
     conn = psycopg2.connect(
-        host="ec2-176-34-222-188.eu-west-1.compute.amazonaws.com",
-        database="d4o5mkpmeckcat",
-        user="yrzjbiwgpfrlgj",
-        password="9de630f05402aa55664087645ecc1e278f943c0f7ad78f62d9c8432dadd5351f",
+        host="ec2-52-209-134-160.eu-west-1.compute.amazonaws.com",
+        database="del99f25i2or5s",
+        user="brmccgpbxwkoki",
+        password="a8b81c8a496be8142dfed4e75ea3e2379f4fbf56ebddc81bb0210ca44d8bb8a2",
         sslmode='require')
     cur = conn.cursor()
     return conn, cur
