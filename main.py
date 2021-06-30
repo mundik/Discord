@@ -1,7 +1,7 @@
 from discord.ext import commands
 import discord
 import Workout
-import Anime_database as Anime
+import Anime
 import System
 import Notes
 import time
@@ -143,8 +143,13 @@ async def note(ctx, *args):
 
 
 @bot.command()
-async def clear(ctx, order, number):
+async def clear(ctx, *args):
     await ctx.send("Deleting messages...")
+    number = args[-1]
+    if len(args) > 2:
+        order = args[-2]
+    else:
+        order = ""
     if order == "u" or order == "U":
         await ctx.channel.purge(limit=int(number), oldest_first=True)
         await ctx.channel.purge(limit=2)

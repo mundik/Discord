@@ -1,4 +1,4 @@
-from datetime import *
+from datetime import timedelta
 import System
 import Database
 
