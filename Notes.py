@@ -24,8 +24,12 @@ def delete_note(name):
     return f"Note {name} successfully deleted"
 
 
-def clear_due():
+def reload_note(ret):
     notes = Database.command('''SELECT * FROM notes''')
     for i in notes:
-        if datetime.strptime(i[1], '%Y-%m-%d %H:%M:%S') < System.now():
+        note_date = datetime.strptime(i[1], '%Y-%m-%d %H:%M:%S')
+        now = System.now()
+        if note_date < now:
             Database.command(f'''DELETE FROM notes where name='{i[0]}' ''')
+        elif note_date > now:
+            ret.append(i)

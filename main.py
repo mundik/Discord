@@ -17,7 +17,9 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print('Bot is ready')
     Workout.check()
-    Notes.clear_due()
+    notes = Notes.reload_note(list())
+    for i in notes:
+        print(i)
 
 
 @bot.command()
