@@ -115,3 +115,30 @@ def disconnect(conn):
     conn.commit()
     if conn is not None:
         conn.close()
+
+
+def backup(backup_type):
+    if backup_type == "all" or backup_type == "":
+        pass
+    elif backup_type == "anime":
+        pass
+    elif backup_type == "system":
+        data = command("""SELECT * FROM "system" """)
+    elif backup_type == "workout":
+        data = command("""SELECT * FROM "wokrout" """)
+    elif backup_type == "notes":
+        data = command("""SELECT * FROM "notes" """)
+    return data
+
+
+def restore(restore_type):
+    if restore_type == "all" or restore_type == "":
+        pass
+    elif restore_type == "anime":
+        pass
+    elif restore_type == "system":
+        pass
+    elif restore_type == "workout":
+        pass
+    elif restore_type == "notes":
+        pass

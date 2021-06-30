@@ -4,6 +4,7 @@ import Workout
 import Anime_database as Anime
 import System
 import Notes
+import Database
 import time
 
 TOKEN = 'NzMzOTE5NTQ2MTg0MDQwNTA5.XxKJ1w.fkLthMofrT3g7DSGBWB59BGrYKo'
@@ -140,6 +141,31 @@ async def note(ctx, *args):
     if func == "delete" or func == "d":
         data = Notes.delete_note(args[1]) if len(args) == 2 else "Missing parameters (syntax: note delete name)"
         await ctx.send(data)
+
+
+@bot.command()
+async def d(ctx, *args):
+    await database(ctx, *args)
+
+
+@bot.command()
+async def database(ctx, *args):
+    try:
+        func = args[0]
+    except IndexError:
+        await ctx.send("Available functions: add")
+        return
+    if func == "backup":
+        try:
+            backup_type = args[1]
+        except IndexError:
+            ctx.send("Missing parameters (syntax: backup type)")
+        else:
+            data = Database.backup(backup_type)
+            with open("database_backup.txt", "w") as file:
+                file.write(data)
+            file = discord.File(f'./database_backup.txt')
+            await ctx.send(file=file, content=f"Backup of {backup_type} table(s):")
 
 
 @bot.command()
