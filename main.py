@@ -76,8 +76,8 @@ async def anime(ctx, *args):
             "Missing parameters (syntax: add Name Act_ep Num_of_ep)"
         await ctx.send(data)
     elif func == "add_going":
-        data = Anime.new_anime_going(args[1:-5], args[-5], args[-4], args[-3], args[-2], args[-1]) if len(args) >= 7 else\
-            "Missing parameters (syntax: add Name Act_ep Num_ep Day Last_updated, Update_hour)"
+        data = Anime.new_anime_going(args[1:-5], args[-5], args[-4], args[-3], args[-2], args[-1]) if len(args) >= 7 \
+            else "Missing parameters (syntax: add Name Act_ep Num_ep Day Last_updated, Update_hour)"
         await ctx.send(data)
     elif func == "finished" or func == "f":
         data = Anime.finished(args[1:]) if len(args) >= 2 else "Missing parameters (syntax: finished Name)"
@@ -123,7 +123,7 @@ async def note(ctx, *args):
     try:
         func = args[0]
     except IndexError:
-        await ctx.send("Available functions: add")
+        await ctx.send("Available functions: add, delete")
         return
     if func == "add" or func == "a":
         name = args[1]
@@ -146,7 +146,8 @@ async def note(ctx, *args):
 async def clear(ctx, order, number):
     await ctx.send("Deleting messages...")
     if order == "u" or order == "U":
-        await ctx.channel.purge(limit=int(number)+2, oldest_first=True)
+        await ctx.channel.purge(limit=int(number), oldest_first=True)
+        await ctx.channel.purge(limit=2)
     else:
         await ctx.channel.purge(limit=int(number)+2)
 
