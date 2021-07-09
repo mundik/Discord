@@ -94,6 +94,9 @@ async def anime(ctx, *args):
         data = Anime.update()
         data = "Nothing to update" if data == "" else data
         await ctx.send(data)
+    elif func == "transfer" or func == "t":
+        data = Anime.transfer(args[1:]) if len(args) >= 2 else "Missing parameters (syntax: transfer Name)"
+        await ctx.send(data)
     elif func == "change":
         data = Anime.change_time(args[1:-1], args[-1]) if len(args) >= 3 else \
             "Missing parameters (syntax: change Name Hour)"
