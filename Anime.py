@@ -23,14 +23,14 @@ def watched(name, add):
         return f"Anime {name} updated."
 
 
-def new_anime_going(name, ep, last, day, update_date, update_time):
+def new_anime_going(name, ep, last, update_date, update_time):
     if isinstance(name, tuple):
         name = " ".join(name)
     find = Database.command(f'''SELECT * FROM "anime_list" as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
         return "Anime already on list."
     else:
-        Database.add_ongoing_anime(name, ep, last, day, update_date, update_time)
+        Database.add_ongoing_anime(name, ep, last, update_date, update_time)
         return f"Anime {name} succesfully added."
 
 
@@ -106,12 +106,12 @@ def update():
     delta = today - last_time
     ret = ""
     for j in range(0, delta.days + 1):
-        day = (last_time + timedelta(days=j)).strftime("%a")
-        data_list = Database.command(f'''SELECT * FROM "anime_ongoing" WHERE day LIKE '{day}' ''')
+        day = (last_time + timedelta(days=j)).strftime('%Y-%m-%d')
+        data_list = Database.command(f'''SELECT * FROM "anime_ongoing" WHERE update_date <= '{day}' ''')
         for i in data_list:
             i = list(i)
-            if i[4] == today:
-                diff = i[5] - System.now().hour
+            if i[3] == today:
+                diff = i[4] - System.now().hour
                 if System.now().minute > 30:
                     diff -= 1
                 if diff == 0:
@@ -121,15 +121,15 @@ def update():
                     append = "s" if diff > 1 else ""
                     ret += f"Anime {i[0]} will have new episode in {diff} hour{append}.\n"
                     continue
-            if i[4] <= today:
+            if i[3] <= today:
                 diff = i[2]
-                while i[4] <= today:
+                while i[3] <= today:
                     i[2] += 1
-                    i[4] += timedelta(days=7)
+                    i[3] += timedelta(days=7)
                 diff = i[2] - diff
                 append = "s" if diff > 1 else ""
                 ret += f"Anime {i[0]} have {diff} new episode{append}.\n"
-                Database.command(f'''UPDATE "anime_ongoing" SET latest_ep = {i[2]}, update_date = '{i[4]}'
+                Database.command(f'''UPDATE "anime_ongoing" SET latest_ep = {i[2]}, update_date = '{i[3]}'
                                      WHERE name LIKE '{i[0]}' ''')
     ret = ret.replace("_", " ")
     System.datewrite("anime", delta.days)
