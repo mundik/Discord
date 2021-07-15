@@ -102,7 +102,8 @@ async def anime(ctx, *args):
             "Missing parameters (syntax: change Name Hour)"
         await ctx.send(data)
     else:
-        await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update, change, transfer)")
+        await ctx.send(
+            "Wrong function(available: watched, add, add_going, finished, status, waiting, update, change, transfer)")
 
 
 @bot.command()
@@ -129,11 +130,12 @@ async def note(ctx, *args):
         await ctx.send("Available functions: add, delete")
         return
     if func == "add" or func == "a":
-        name = args[1]
-        date = args[2]
-        text = ' '.join(args[3:])
-        data = Notes.add_note(name, date, text) if len(args) > 3 else \
-            "Missing parameters (syntax: note add name date text *interval*)"
+        if len(args) > 3:
+            name = args[1], date = args[2], text = ' '.join(args[3:])
+            data = Notes.add_note(name, date, text)
+        else:
+            name = text = ""
+            data = "Missing parameters (syntax: note add name date text *interval*)"
         if isinstance(data, str):
             await ctx.send(data)
             return

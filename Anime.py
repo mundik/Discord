@@ -30,8 +30,9 @@ def new_anime_going(name, ep, last, update_date, update_time):
     if len(find) != 0:
         return "Anime already on list."
     else:
-        Database.add_ongoing_anime(name, ep, last, update_date, update_time)
-        return f"Anime {name} succesfully added."
+        if Database.add_ongoing_anime(name, ep, last, update_date, update_time):
+            return f"Anime {name} succesfully added."
+        return "Database error."
 
 
 def new_anime(name, ep, max_ep):
@@ -41,8 +42,9 @@ def new_anime(name, ep, max_ep):
     if len(find) != 0:
         return "Anime already on list."
     else:
-        Database.add_finished_anime(name, ep, max_ep)
-        return f"Anime {name} succesfully added."
+        if Database.add_finished_anime(name, ep, max_ep):
+            return f"Anime {name} succesfully added."
+        return "Database error."
 
 
 def finished(name):
@@ -78,7 +80,7 @@ def status():
         ret += f"Name: {i[0]}, Episode: {i[1]} out of {i[2]} \n"
     data_list = Database.command(f'''SELECT * FROM "anime_ongoing" ORDER BY update_date, update_time''')
     for i in data_list:
-        ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3]} at {i[5]}:00\n"
+        ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%a')} at {i[4]}:00\n"
     return System.days_to_human(ret)
 
 
@@ -131,6 +133,6 @@ def update():
                 ret += f"Anime {i[0]} have {diff} new episode{append}.\n"
                 Database.command(f'''UPDATE "anime_ongoing" SET latest_ep = {i[2]}, update_date = '{i[3]}'
                                      WHERE name LIKE '{i[0]}' ''')
-    ret = ret.replace("_", " ")
-    System.datewrite("anime", delta.days)
+    if last_time != today:
+        System.datewrite("anime", delta.days)
     return ret

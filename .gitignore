@@ -6,3 +6,4 @@ __pycache__
 *.iml
 Anime.py.old
 Sysinfo.txt
+Database_backup/

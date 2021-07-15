@@ -6,9 +6,12 @@ def add_finished_anime(name, curr_ep, ep):
     sql = f'''INSERT INTO "anime_finished"(name, current_ep, episodes) VALUES('{name}', {curr_ep}, {ep})'''
     try:
         cur.execute(sql)
-        add_anime_list(cur, name, typ="finished")
+        if add_anime_list(cur, name, typ="finished"):
+            return True
+        return False
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
+        return False
     finally:
         disconnect(conn)
 
@@ -19,16 +22,24 @@ def add_ongoing_anime(name, ep, last, update_date, update_time):
 VALUES('{name}', {ep}, {last}, '{update_date}', {update_time})'''
     try:
         cur.execute(sql)
-        add_anime_list(cur, name, typ="ongoing")
+        if add_anime_list(cur, name, typ="ongoing"):
+            return True
+        return False
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
+        return False
     finally:
         disconnect(conn)
 
 
 def add_anime_list(cur, name, typ):
     sql = f'''INSERT INTO "anime_list"(name, type) VALUES('{name}', '{typ}')'''
-    cur.execute(sql)
+    try:
+        cur.execute(sql)
+        return True
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return False
 
 
 def get_anime_type(name):
@@ -66,14 +77,17 @@ def command(sql):
     try:
         conn, cur = connect()
         cur.execute(sql)
-        ret = cur.fetchall()
+        try:
+            ret = cur.fetchall()
+        except psycopg2.ProgrammingError:
+            ret = ""
+        return ret
     except psycopg2.ProgrammingError:
-        disconnect(conn)
+        exit(f"Wrong SQL request: {sql}")
     except psycopg2.OperationalError:
         exit("Cannot connect to database.")
-    else:
+    finally:
         disconnect(conn)
-        return ret
 
 
 def add_note(name, time, text, repeat):
