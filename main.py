@@ -88,18 +88,21 @@ async def anime(ctx, *args):
         await ctx.send(data)
     elif func == "waiting" or func == "wait":
         data = Anime.waiting()
-        data = "Nothing on watchlist" if data == "" else data
+        data = "Nothing on waitlist" if data == "" else data
         await ctx.send(data)
     elif func == "update" or func == "u":
         data = Anime.update()
         data = "Nothing to update" if data == "" else data
+        await ctx.send(data)
+    elif func == "transfer" or func == "t":
+        data = Anime.transfer(args[1:]) if len(args) >= 2 else "Missing parameters (syntax: transfer Name)"
         await ctx.send(data)
     elif func == "change":
         data = Anime.change_time(args[1:-1], args[-1]) if len(args) >= 3 else \
             "Missing parameters (syntax: change Name Hour)"
         await ctx.send(data)
     else:
-        await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update, change)")
+        await ctx.send("Wrong function(available: watched, add, add_going, finished, status, waiting, update, change, transfer)")
 
 
 @bot.command()
