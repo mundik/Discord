@@ -7,7 +7,7 @@ def now():
 
 
 def today():
-    return strp(str(date.today()))
+    return date.today()
 
 
 def dateanime():

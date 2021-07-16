@@ -50,9 +50,10 @@ def new_anime(name, ep, max_ep):
 def finished(name):
     if isinstance(name, tuple):
         name = " ".join(name)
-    typ = Database.command(f'''SELECT type FROM "anime_list" as Anime where Anime.name LIKE '{name}' ''')[0][0]
+    typ = Database.command(f'''SELECT type FROM "anime_list" as Anime where Anime.name LIKE '{name}' ''')
     if len(typ) == 0:
         return "Anime not found."
+    typ = typ[0][0]
     if typ == "ongoing":
         sql = f'''DELETE FROM "anime_ongoing" as Anime where Anime.name LIKE '{name}' '''
     elif typ == "finished":

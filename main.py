@@ -152,8 +152,11 @@ async def note(ctx, *args):
 
 @bot.command()
 async def clear(ctx, *args):
-    await ctx.send("Deleting messages...")
+    if len(args) == 0:
+        ctx.send("Insert number of messages to delete")
+        return
     number = args[-1]
+    await ctx.send("Deleting messages...")
     if len(args) > 2:
         order = args[-2]
     else:
