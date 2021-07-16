@@ -4,7 +4,7 @@ import Workout
 import Anime
 import System
 import Notes
-import time
+import time as Time
 
 TOKEN = 'NzMzOTE5NTQ2MTg0MDQwNTA5.XxKJ1w.fkLthMofrT3g7DSGBWB59BGrYKo'
 GUILD = '508295043153526816'
@@ -130,9 +130,12 @@ async def note(ctx, *args):
         await ctx.send("Available functions: add, delete")
         return
     if func == "add" or func == "a":
-        if len(args) > 3:
-            name = args[1], date = args[2], text = ' '.join(args[3:])
-            data = Notes.add_note(name, date, text)
+        if len(args) > 4:
+            name = args[1]
+            date = args[2]
+            time = args[3]
+            text = ' '.join(args[4:])
+            data = Notes.add_note(name, date, time, text)
         else:
             name = text = ""
             data = "Missing parameters (syntax: note add name date text *interval*)"
@@ -163,7 +166,7 @@ async def clear(ctx, *args):
 
 
 async def mention(ctx, name, text, sleep_time):
-    time.sleep(sleep_time)
+    Time.sleep(sleep_time)
     respond = f"{name.replace('_', ' ')}\n{text}\n{ctx.author.mention}"
     await ctx.send(respond)
     Notes.delete_note(name)

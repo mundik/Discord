@@ -3,18 +3,20 @@ from datetime import datetime
 import System
 
 
-def add_note(name, input_time, text):
-    time = datetime.strptime(input_time, '%d.%m.%Y_%H:%M')
-    if time < System.now():
+def add_note(name, input_date, input_time, text):
+    timestamp = datetime.strptime(f'{input_date} {input_time}', '%d.%m.%Y %H:%M')
+    now = System.now()
+    if timestamp < now:
         return f"Unable to create notification for past event."
     else:
-        delta = time - System.now()
-        sec = delta.seconds
+        delta = timestamp-now
+        sec = (delta.days*86400)+delta.seconds
     note = Database.command(f'''SELECT * FROM notes WHERE name='{name}' ''')
     if len(note) != 0:
         return f'Note {name} already exists.'
     else:
-        Database.add_note(name, time, text, repeat='FALSE')
+        input_date = datetime.strptime(input_date, '%d.%m.%Y').strftime('%Y-%m-%d')
+        Database.add_note(name, input_date, input_time, text, repeat='FALSE')
         return f'Note {name} added\nNotification for note {name} has been set...\nRemaining time: ' \
                f'{System.date_to_human(sec)}', sec
 
@@ -27,5 +29,5 @@ def delete_note(name):
 def clear_due():
     notes = Database.command('''SELECT * FROM notes''')
     for i in notes:
-        if datetime.strptime(i[1], '%Y-%m-%d %H:%M:%S') < System.now():
+        if datetime.strptime(i[1], '%H:%M:%S') < System.now() and datetime.strptime(i[2], '%Y-%m-%d'):
             Database.command(f'''DELETE FROM notes where name='{i[0]}' ''')

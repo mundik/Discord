@@ -90,9 +90,9 @@ def command(sql):
         disconnect(conn)
 
 
-def add_note(name, time, text, repeat):
+def add_note(name, date, time, text, repeat):
     conn, cur = connect()
-    sql = f'''INSERT INTO "notes"(name, time, repeat, text) VALUES('{name}', '{time}', {repeat}, '{text}')'''
+    sql = f'''INSERT INTO "notes"(name, date, time, repeat, text) VALUES('{name}', '{date}', '{time}', {repeat}, '{text}')'''
     cur.execute(sql)
     disconnect(conn)
 
