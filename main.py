@@ -44,8 +44,8 @@ async def workout(ctx, *args):
             else:
                 await ctx.send(f"Substracted {num} points from {option}.\nNew value: {remain}")
     elif func == "status" or func == "stat":
-        num = Workout.status()
-        await ctx.send(f"Remaining workout points:\n {num}")
+        data = Workout.status()
+        await ctx.send(f"Remaining workout points:\n {data}")
     else:
         await ctx.send("Wrong function(available: status,sub)")
 
@@ -155,17 +155,15 @@ async def clear(ctx, *args):
     if len(args) == 0:
         ctx.send("Insert number of messages to delete")
         return
-    number = args[-1]
-    await ctx.send("Deleting messages...")
+    number = int(args[-1]) + 1
     if len(args) > 2:
         order = args[-2]
     else:
         order = ""
     if order == "u" or order == "U":
-        await ctx.channel.purge(limit=int(number), oldest_first=True)
-        await ctx.channel.purge(limit=2)
+        await ctx.channel.purge(limit=number, oldest_first=True)
     else:
-        await ctx.channel.purge(limit=int(number)+2)
+        await ctx.channel.purge(limit=number)
 
 
 async def mention(ctx, name, text, sleep_time):
