@@ -81,8 +81,8 @@ def status():
         ret += f"Name: {i[0]}, Episode: {i[1]} out of {i[2]} \n"
     data_list = Database.command(f'''SELECT * FROM "anime_ongoing" ORDER BY update_date, update_time''')
     for i in data_list:
-        ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%a')} at {i[4]}:00\n"
-    return System.days_to_human(ret)
+        ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%A')} at {i[4]}:00\n"
+    return ret
 
 
 def waiting():
@@ -93,7 +93,7 @@ def waiting():
         diff = i[2] - i[1]
         append = "s" if diff > 1 else ""
         ret += f"Anime {i[0]} have {diff} unwatched episode{append}.\n"
-    return System.days_to_human(ret)
+    return ret
 
 
 def change_time(name, hour):
