@@ -18,7 +18,23 @@ def add_note(name, input_date, input_time, text):
         input_date = datetime.strptime(input_date, '%d.%m.%Y').strftime('%Y-%m-%d')
         Database.add_note(name, input_date, input_time, text, repeat='FALSE')
         return f'Note {name} added\nNotification for note {name} has been set...\nRemaining time: ' \
-               f'{System.date_to_human(sec)}', sec
+               f'{System.time_to_human(sec)}', sec
+
+
+def show_note():
+    notes = Database.command('''SELECT * FROM notes''')
+    if len(notes) == 0:
+        return "No notes in database."
+    else:
+        today = System.today()
+        now = System.now()
+        ret = ""
+        for i in notes:
+            delta_time = i[1] - now
+            delta_date = i[2] - today
+            delta = (delta_date * 86400) + delta_time
+            ret += f"Name: {i[0]}, Remaining time: {System.time_to_human(delta)}\n"
+        return ret
 
 
 def delete_note(name):

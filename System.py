@@ -32,7 +32,7 @@ def datewrite(typ, add):
     Database.command(f'''UPDATE "System_date" SET date='{get_date}' WHERE type='{typ}' ''')
 
 
-def date_to_human(input_time):
+def time_to_human(input_time):
     seconds = int(input_time)
     periods = [
         ('month', 60 * 60 * 24 * 30),
