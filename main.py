@@ -169,12 +169,11 @@ async def mention(ctx, name, text, sleep_time):
     Notes.delete_note(name)
 
 
-"""
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send("Command not found")
     else:
         await ctx.send(str(error))
-"""
+
 bot.run(TOKEN)
