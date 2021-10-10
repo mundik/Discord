@@ -84,8 +84,14 @@ async def anime(ctx, *args):
         await ctx.send(data)
     elif func == "status" or func == "stat":
         data = Anime.status()
-        data = "No anime in database" if data == "" else data
-        await ctx.send(data)
+        if type(data) == str:
+            if data == "":
+                data = "No anime in database"
+            await ctx.send(data)
+        else:
+            for i in data:
+                await ctx.send(i)
+
     elif func == "waiting" or func == "wait":
         data = Anime.waiting()
         data = "Nothing on waitlist" if data == "" else data

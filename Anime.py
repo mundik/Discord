@@ -68,7 +68,7 @@ def finished(name):
 def transfer(name):
     if isinstance(name, tuple):
         name = " ".join(name)
-    data = Database.command(f'''SELECT * FROM "anime_ongoing" as Anime where Anime.name LIKE '{name}' ''') [0]
+    data = Database.command(f'''SELECT * FROM "anime_ongoing" as Anime where Anime.name LIKE '{name}' ''')[0]
     finished(name)
     Database.add_finished_anime(data[0], data[1], data[2])
     return f"Anime {name} transfered from ongoing to finished."
@@ -82,7 +82,13 @@ def status():
     data_list = Database.command(f'''SELECT * FROM "anime_ongoing" ORDER BY update_date, update_time''')
     for i in data_list:
         ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%A')} at {i[4]}:00\n"
-    return ret
+    if len(ret) > 2000:
+        mid = int(len(ret) / 2)
+        about_mid = mid + ret[mid:].index('\n')
+        data = ret[:about_mid], ret[about_mid + 1:]
+        return data
+    else:
+        return ret
 
 
 def waiting():
