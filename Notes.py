@@ -45,7 +45,5 @@ def delete_note(name):
 def clear_due():
     notes = Database.command('''SELECT * FROM notes''')
     for i in notes:
-        if (datetime.strptime(i[1], '%H:%M:%S') < System.now() and
-           datetime.strptime(i[2], '%Y-%m-%d') == System.today()) or \
-           (datetime.strptime(i[2], '%Y-%m-%d') < System.today()):
+        if i[1] < datetime.time(System.now()) and i[2] == System.today() or i[2] < System.today():
             Database.command(f'''DELETE FROM notes where name='{i[0]}' ''')

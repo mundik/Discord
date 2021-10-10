@@ -130,14 +130,14 @@ async def note(ctx, *args):
         await ctx.send("Available functions: add, delete")
         return
     if func == "add" or func == "a":
-        if len(args) > 5:
+        if len(args) > 4:
             name = args[1]
             date = args[2]
             time = args[3]
             text = ' '.join(args[4:])
             data = Notes.add_note(name, date, time, text)
         else:
-            await ctx.send("Missing parameters (syntax: note add name date text *interval*)")
+            await ctx.send("Missing parameters (syntax: note add name date text)")
             return
         await ctx.send(data[0])
         bot.loop.create_task(mention(ctx, name, text, data[1]))
