@@ -59,3 +59,6 @@ def days_to_human(string):
     string = string.replace("Sat", "Saturday")
     string = string.replace("Sun", "Sunday")
     return string
+
+
+workout_begin = date(year=2023, month=1, day=1)
