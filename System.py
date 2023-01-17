@@ -10,13 +10,13 @@ def today():
     return date.today()
 
 
-def dateanime():
-    anime_date = (Database.command(f'''SELECT date from "System_time" WHERE type='anime' ''')[0][0])
+def date_anime():
+    anime_date = (Database.command(f'''SELECT date from System_time WHERE type='anime' ''')[0][0])
     return anime_date
 
 
-def datework():
-    workout_date = (Database.command(f'''SELECT date from "System_time" WHERE type='workout' ''')[0][0])
+def date_work():
+    workout_date = (Database.command(f'''SELECT date from System_time WHERE type='workout' ''')[0][0])
     return workout_date
 
 
@@ -25,11 +25,11 @@ def strp(input_date):
 
 
 def datewrite(typ, add):
-    sql = f'''SELECT date from "System_time" WHERE type='{typ}' '''
+    sql = f'''SELECT date from System_time WHERE type='{typ}' '''
     get_date = (Database.command(sql)[0][0])
     add = timedelta(days=add)
     get_date += add
-    Database.command(f'''UPDATE "System_time" SET date='{get_date}' WHERE type='{typ}' ''')
+    Database.command(f"UPDATE System_time SET date='{get_date}' WHERE type='{typ}'")
 
 
 def time_to_human(input_time):

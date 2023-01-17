@@ -92,14 +92,14 @@ def command(sql):
 
 def add_note(name, date, time, text, repeat):
     conn, cur = connect()
-    sql = f'''INSERT INTO "notes"(name, date, time, repeat, text) VALUES('{name}', '{date}', '{time}', {repeat}, '{text}')'''
+    sql = f'''INSERT INTO notes(name, date, time, repeat, text) VALUES('{name}', '{date}', '{time}', {repeat}, '{text}')'''
     cur.execute(sql)
     disconnect(conn)
 
 
 def add_repeat_note(name, time, text, interval, repeat):
     conn, cur = connect()
-    sql = f'''INSERT INTO "notes"(name, time, repeat, every,text)VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
+    sql = f'''INSERT INTO notes(name, time, repeat, every,text)VALUES('{name}','{time}',{repeat},{interval},'{text}')'''
     cur.execute(sql)
     disconnect(conn)
 
