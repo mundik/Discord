@@ -1,4 +1,4 @@
-import psycopg2
+import mysql.connector
 
 
 def add_finished_anime(name, curr_ep, ep):
@@ -9,7 +9,7 @@ def add_finished_anime(name, curr_ep, ep):
         if add_anime_list(cur, name, typ="finished"):
             return True
         return False
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, mysql.connector.DatabaseError) as error:
         print(error)
         return False
     finally:
@@ -25,7 +25,7 @@ VALUES('{name}', {ep}, {last}, '{update_date}', {update_time})'''
         if add_anime_list(cur, name, typ="ongoing"):
             return True
         return False
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, mysql.connector.DatabaseError) as error:
         print(error)
         return False
     finally:
@@ -37,7 +37,7 @@ def add_anime_list(cur, name, typ):
     try:
         cur.execute(sql)
         return True
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, mysql.connector.DatabaseError) as error:
         print(error)
         return False
 
@@ -48,11 +48,11 @@ def get_anime_type(name):
     try:
         cur.execute(sql)
         ret = cur.fetchall()
-        if len(ret) is not 0:
+        if len(ret) != 0:
             ret = ret[0][0]
         disconnect(conn)
         return ret
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, mysql.connector.DatabaseError) as error:
         print(error)
         disconnect(conn)
 
@@ -79,12 +79,12 @@ def command(sql):
         cur.execute(sql)
         try:
             ret = cur.fetchall()
-        except psycopg2.ProgrammingError:
+        except mysql.connector.ProgrammingError:
             ret = ""
         return ret
-    except psycopg2.ProgrammingError:
+    except mysql.connector.ProgrammingError:
         exit(f"Wrong SQL request: {sql}")
-    except psycopg2.OperationalError:
+    except mysql.connector.OperationalError:
         exit("Cannot connect to database.")
     finally:
         disconnect(conn)
@@ -105,22 +105,8 @@ def add_repeat_note(name, time, text, interval, repeat):
 
 
 def connect():
-    conn = psycopg2.connect(
-        host="ec2-52-209-134-160.eu-west-1.compute.amazonaws.com",
-        database="del99f25i2or5s",
-        user="brmccgpbxwkoki",
-        password="a8b81c8a496be8142dfed4e75ea3e2379f4fbf56ebddc81bb0210ca44d8bb8a2",
-        sslmode='require')
-    cur = conn.cursor()
-    return conn, cur
-
-
-def connect_local():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="Mundik",
-        user="postgres",
-        password="osamelka2")
+    conn = mysql.connector.connect(password='Iin++dmiFqTQ^sD2!jjwwZ05', database='s83933_PROJECT_ECHELON',
+                              host='51.77.202.155', user='u83933_yhy1QuwcdF')
     cur = conn.cursor()
     return conn, cur
 
