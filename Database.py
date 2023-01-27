@@ -1,9 +1,10 @@
 import mysql.connector
 
 
-def add_finished_anime(name, curr_ep, ep):
+def add_finished_anime(name, curr_ep, ep, url):
     conn, cur = connect()
-    sql = f'''INSERT INTO "anime_finished"(name, current_ep, episodes) VALUES('{name}', {curr_ep}, {ep})'''
+    sql = f'''INSERT INTO anime_finished (name, current_ep, episodes, url) VALUES
+    ('{name}', {curr_ep}, {ep}, '{url}')'''
     try:
         cur.execute(sql)
         if add_anime_list(cur, name, typ="finished"):

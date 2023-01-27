@@ -23,9 +23,12 @@ def watched(name, add):
         return f"Anime {name} updated."
 
 
-def new_anime_going(url, ep, last, update_date, update_time):
-    name = System.parse_url(url)
-    find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
+def new_anime_going(url, ep, last, update_date, update_time, name=None):
+    if name is None:
+        name = System.parse_url(url)
+    elif isinstance(name, tuple):
+        name = " ".join(name)
+    find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '%{name}%' ''')
     if len(find) != 0:
         return "Anime already on list."
     else:
@@ -34,15 +37,28 @@ def new_anime_going(url, ep, last, update_date, update_time):
         return "Database error."
 
 
-def new_anime(url, ep, max_ep):
-    name = System.parse_url(url)
-    find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
+def new_anime(url, ep, max_ep, name=None):
+    if name is None:
+        name = System.parse_url(url)
+    elif isinstance(name, tuple):
+        name = " ".join(name)
+    find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '%{name}%' ''')
     if len(find) != 0:
         return "Anime already on list."
     else:
         if Database.add_finished_anime(name, ep, max_ep, url):
             return f"Anime {name} succesfully added."
         return "Database error."
+
+
+def new_anime_url(url):
+    name, anime_type, episode, remain = System.parse_page(url)
+    air_time = System.add_time(System.now(), remain)
+    if anime_type == "Ongoing":
+        ret = new_anime_going(url, 0, episode, air_time.date(), air_time.hour, name=name)
+    else:
+        ret = new_anime(url, 0, episode, name=name)
+    return ret
 
 
 def finished(name):

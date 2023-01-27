@@ -1,4 +1,7 @@
 from datetime import *
+import requests
+import re
+
 import Database
 
 
@@ -61,8 +64,25 @@ def days_to_human(string):
     return string
 
 
+def add_time(input_time, delta):
+    if type(delta) == tuple:
+        input_time += timedelta(days=int(delta[0]))
+        delta = delta[1]
+    input_time += timedelta(hours=int(delta))
+    return input_time
+
+
 def parse_url(url):
     return (url[26:-1]).replace("-", " ").title()
+
+
+def parse_page(url):
+    html = requests.get(url).text
+    name = re.findall("<title> (.*?) - AnimeDao</title>", html)[0]
+    anime_type = re.findall('Status:</b></td><td class="align-middle">(.*?)</td>', html)[0]
+    episode = re.findall('Episode (\d+)', html)[0]
+    remain = re.findall('(\d+) \S+(?: \S+ (\d+) \S+)? left', html)[0]
+    return name, anime_type, episode, remain
 
 
 workout_begin = date(year=2023, month=1, day=1)
