@@ -8,7 +8,7 @@ def watched(name, add):
         name = " ".join(name)
     ep, typ = Database.get_anime(name)
     if len(ep) == 0:
-        return f"Anime {name} not found."
+        return f"Anime '{name}' not found."
     else:
         if isinstance(add, int):
             return f"{add} is not a number."
@@ -20,7 +20,7 @@ def watched(name, add):
         else:
             return "Database Error."
         Database.command(sql)
-        return f"Anime {name} updated."
+        return f"Anime '{name}' updated."
 
 
 def new_anime_going(url, ep, last, update_date, update_time, name=None):
@@ -33,7 +33,7 @@ def new_anime_going(url, ep, last, update_date, update_time, name=None):
         return "Anime already on list."
     else:
         if Database.add_ongoing_anime(url, name, ep, last, update_date, update_time):
-            return f"Anime {name} succesfully added."
+            return f"Anime '{name}' succesfully added."
         return "Database error."
 
 
@@ -47,7 +47,7 @@ def new_anime(url, ep, max_ep, name=None):
         return "Anime already on list."
     else:
         if Database.add_finished_anime(name, ep, max_ep, url):
-            return f"Anime {name} succesfully added."
+            return f"Anime '{name}' succesfully added."
         return "Database error."
 
 
@@ -76,7 +76,7 @@ def finished(name):
         return "Database Error"
     Database.command(sql)
     Database.command(f'''DELETE FROM anime_list where name LIKE '%{name}%' ''')
-    return f"Anime {name} was removed from watchlist."
+    return f"Anime '{name}' was removed from watchlist."
 
 
 def transfer(name):
@@ -87,9 +87,9 @@ def transfer(name):
         data = data[0]
         finished(name)
         Database.add_finished_anime(data[0], data[1], data[2], data[5])
-        return f"Anime {name} transfered from ongoing to finished."
+        return f"Anime '{name}' transfered from ongoing to finished."
     else:
-        return f"Anime {name} not found."
+        return f"Anime '{name}' not found."
 
 
 def status():
@@ -124,7 +124,7 @@ def change_time(name, hour):
     if isinstance(name, tuple):
         name = " ".join(name)
     Database.command(f'''UPDATE anime_ongoing SET update_time = {hour} WHERE name LIKE '%{name}%' ''')
-    return f"Anime {name} update time set to {hour}:00"
+    return f"Anime '{name}' update time set to {hour}:00"
 
 
 def update():
