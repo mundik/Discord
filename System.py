@@ -61,4 +61,8 @@ def days_to_human(string):
     return string
 
 
+def parse_url(url):
+    return (url[26:-1]).replace("-", " ").title()
+
+
 workout_begin = date(year=2023, month=1, day=1)

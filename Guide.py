@@ -4,11 +4,11 @@ anime_watched_header = "Increment number of watched episodes on specified anime 
 anime_watched = f"{anime_header}watched [Name of anime] [Number of episodes]"
 anime_watched_types = "[Number of episodes] must be number."
 anime_add_header = "Add new, finished anime to database."
-anime_add = f"{anime_header}add [Name of anime] [Number of watched episode] [Total number of episodes]"
+anime_add = f"{anime_header}add [URL of anime] [Number of watched episode] [Total number of episodes]"
 anime_add_types = "[Number of watched episode] and [Total number of episodes] must be numbers."
 anime_add_going_header = "Add new, ongoing anime to database."
-anime_add_going = f"{anime_header}add_going [Name of anime] [Number of watched episodes] [Number of current episodes]" \
-                  "[Airing day] [Last updated] [Airing hour])"
+anime_add_going = f"{anime_header}add_going [URL of anime] [Number of watched episodes] [Number of current episodes]" \
+                  "[Airing day] [Airing hour])"
 anime_add_going_types = "[Number of watched episode], [Number of current episodes] and [Airing hour] must be numbers," \
     "[Last updated] must be date in format 'YYYY-MM-DD'"
 anime_finished_header = "Remove anime from database."

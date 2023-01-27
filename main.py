@@ -48,7 +48,7 @@ async def workout(ctx, *args):
                 await ctx.send(f"Substracted {num} points from {option}.\nNew value: {remain}")
     elif func == "status" or func == "stat":
         data = Workout.status()
-        await ctx.send(f"Remaining workout points:\n {data}")
+        await ctx.send(f"Remaining workout points:\n{data}")
     else:
         await ctx.send(Guide.workout_wrong_function)
 
@@ -74,10 +74,10 @@ async def anime(ctx, *args):
         data = Anime.watched(args[1:-1], args[-1]) if len(args) >= 3 else Guide.anime_watched
         await ctx.send(data)
     elif func == "add":
-        data = Anime.new_anime(args[1:-2], args[-2], args[-1]) if len(args) >= 4 else Guide.anime_add
+        data = Anime.new_anime(args[1], args[2], args[3]) if len(args) == 3 else Guide.anime_add
         await ctx.send(data)
     elif func == "add_going":
-        data = Anime.new_anime_going(args[1:-4], args[-4], args[-3], args[-2], args[-1]) if len(args) >= 6 else \
+        data = Anime.new_anime_going(args[1], args[2], args[3], args[4], args[5]) if len(args) == 5 else \
             Guide.anime_add_going
         await ctx.send(data)
     elif func == "finished" or func == "f":
@@ -92,7 +92,6 @@ async def anime(ctx, *args):
         else:
             for i in data:
                 await ctx.send(i)
-
     elif func == "waiting" or func == "wait":
         data = Anime.waiting()
         data = "Nothing on waitlist" if data == "" else data

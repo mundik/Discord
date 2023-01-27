@@ -23,26 +23,24 @@ def watched(name, add):
         return f"Anime {name} updated."
 
 
-def new_anime_going(name, ep, last, update_date, update_time):
-    if isinstance(name, tuple):
-        name = " ".join(name)
+def new_anime_going(url, ep, last, update_date, update_time):
+    name = System.parse_url(url)
     find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
         return "Anime already on list."
     else:
-        if Database.add_ongoing_anime(name, ep, last, update_date, update_time):
+        if Database.add_ongoing_anime(url, name, ep, last, update_date, update_time):
             return f"Anime {name} succesfully added."
         return "Database error."
 
 
-def new_anime(name, ep, max_ep):
-    if isinstance(name, tuple):
-        name = " ".join(name)
+def new_anime(url, ep, max_ep):
+    name = System.parse_url(url)
     find = Database.command(f'''SELECT * FROM anime_list as Anime where Anime.name LIKE '{name}' ''')
     if len(find) != 0:
         return "Anime already on list."
     else:
-        if Database.add_finished_anime(name, ep, max_ep):
+        if Database.add_finished_anime(name, ep, max_ep, url):
             return f"Anime {name} succesfully added."
         return "Database error."
 

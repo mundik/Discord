@@ -16,10 +16,10 @@ def add_finished_anime(name, curr_ep, ep):
         disconnect(conn)
 
 
-def add_ongoing_anime(name, ep, last, update_date, update_time):
+def add_ongoing_anime(url, name, ep, last, update_date, update_time):
     conn, cur = connect()
-    sql = f'''INSERT INTO "anime_ongoing"(name, current_ep, latest_ep, update_date, update_time)
-VALUES('{name}', {ep}, {last}, '{update_date}', {update_time})'''
+    sql = f'''INSERT INTO "anime_ongoing"(name, current_ep, latest_ep, update_date, update_time, url)
+VALUES('{name}', {ep}, {last}, '{update_date}', {update_time}, '{url}')'''
     try:
         cur.execute(sql)
         if add_anime_list(cur, name, typ="ongoing"):
@@ -44,7 +44,7 @@ def add_anime_list(cur, name, typ):
 
 def get_anime_type(name):
     conn, cur = connect()
-    sql = f'''SELECT type FROM "anime_list" as Anime where Anime.name = '{name}' '''
+    sql = f'''SELECT type FROM "anime_list" as Anime where Anime.name LIKE '{name}' '''
     try:
         cur.execute(sql)
         ret = cur.fetchall()
@@ -61,9 +61,9 @@ def get_anime(name):
     conn, cur = connect()
     typ = get_anime_type(name)
     if typ == "ongoing":
-        sql = f'''SELECT "current_ep" FROM "anime_ongoing" as Anime where Anime.name = '{name}' '''
+        sql = f'''SELECT "current_ep" FROM "anime_ongoing" as Anime where Anime.name LIKE '{name}' '''
     elif typ == "finished":
-        sql = f'''SELECT "current_ep" FROM "anime_finished" as Anime where Anime.name = '{name}' '''
+        sql = f'''SELECT "current_ep" FROM "anime_finished" as Anime where Anime.name LIKE '{name}' '''
     else:
         return "", ""
     cur.execute(sql)
