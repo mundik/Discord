@@ -66,10 +66,9 @@ def days_to_human(string):
 
 
 def add_time(input_time, delta):
-    if type(delta) == tuple:
-        input_time += timedelta(days=int(delta[0]))
-        delta = delta[1]
-    input_time += timedelta(hours=int(delta))
+    if len(delta) == 2:
+        input_time += timedelta(days=int(delta.pop(0)))
+    input_time += timedelta(hours=int(delta[0]))
     return input_time
 
 
@@ -83,7 +82,7 @@ def parse_page(url):
     anime_type = re.findall('Status:</b></td><td class="align-middle">(.*?)</td>', page_html)[0]
     episode = re.findall('Episode (\d+)', page_html)[0]
     try:
-        remain = re.findall('(\d+) \S+(?: \S+ (\d+) \S+)? left', page_html)[0]
+        remain = re.findall('\d+', re.findall('\d+ \S+(?: \S+ \d+ \S+)? left', page_html)[0])
     except IndexError:
         remain = "0"
     return name, anime_type, episode, remain

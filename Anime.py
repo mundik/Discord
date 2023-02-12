@@ -140,9 +140,9 @@ def update():
         for i in data_list:
             name, ep, latest, update_date, update_time, url = i
             update_datetime = datetime.datetime.combine(update_date, datetime.time(update_time))
-            delta = now - update_datetime
+            delta = (update_datetime - now).total_seconds()
             if update_date == today:
-                diff = round(delta.seconds / 3600)
+                diff = round(delta / 3600)
                 if diff > 0:
                     append = "s" if diff > 1 else ""
                     ret += f"Anime \"{name}\" will have new episode in {diff} hour{append}.\n"
