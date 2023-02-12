@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 import System
 import Database
@@ -130,34 +131,38 @@ def change_time(name, hour):
 def update():
     last_time = System.date_anime()
     today = System.today()
-    delta = today - last_time
+    now = System.now()
+    date_delta = today - last_time
     ret = ""
-    for j in range(0, delta.days + 1):
+    for j in range(0, date_delta.days + 1):
         day = (last_time + timedelta(days=j)).strftime('%Y-%m-%d')
         data_list = Database.command(f'''SELECT * FROM anime_ongoing WHERE update_date <= '{day}' ''')
         for i in data_list:
-            i = list(i)
-            if i[3] == today:
-                diff = i[4] - System.now().hour
-                if System.now().minute > 30:
-                    diff -= 1
-                if diff == 0:
-                    ret += f"Anime {i[0]} will have new episode within hour.\n"
-                    continue
-                elif diff > 0:
+            name, ep, latest, update_date, update_time, url = i
+            update_datetime = datetime.datetime.combine(update_date, datetime.time(update_time))
+            delta = now - update_datetime
+            if update_date == today:
+                diff = round(delta.seconds / 3600)
+                if diff > 0:
                     append = "s" if diff > 1 else ""
-                    ret += f"Anime {i[0]} will have new episode in {diff} hour{append}.\n"
+                    ret += f"Anime \"{name}\" will have new episode in {diff} hour{append}.\n"
                     continue
-            if i[3] <= today:
-                diff = i[2]
-                while i[3] <= today:
-                    i[2] += 1
-                    i[3] += timedelta(days=7)
-                diff = i[2] - diff
+                elif diff == 0:
+                    if not int(System.parse_page(url)[2]) > latest:
+                        ret += f"Anime \"{name}\" will have new episode within hour.\n"
+                        continue
+            if update_date <= today:
+                released = int(System.parse_page(url)[2])
+                old = latest
+                while update_date <= today:
+                    if released > latest:
+                        latest += 1
+                    update_date += timedelta(days=7)
+                diff = latest - old
                 append = "s" if diff > 1 else ""
-                ret += f"Anime {i[0]} have {diff} new episode{append}.\n"
-                Database.command(f'''UPDATE anime_ongoing SET latest_ep = {i[2]}, update_date = '{i[3]}'
-                                     WHERE name LIKE '%{i[0]}%' ''')
+                ret += f"Anime \"{name}\" have {diff} new episode{append}.\n"
+                Database.command(f'''UPDATE anime_ongoing SET latest_ep = {latest}, update_date = '{update_date}'
+                                     WHERE name LIKE "%{name}%" ''')
     if last_time != today:
-        System.datewrite("anime", delta.days)
+        System.datewrite("anime", date_delta.days)
     return ret
