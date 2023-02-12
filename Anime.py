@@ -56,7 +56,7 @@ def new_anime_url(url):
     name, anime_type, episode, remain = System.parse_page(url)
     air_time = System.add_time(System.now(), remain)
     if anime_type == "Ongoing":
-        ret = new_anime_going(url, 0, episode, air_time.date(), air_time.hour, name=name)
+        ret = new_anime_going(url, 0, episode, air_time.date(), air_time.hour+1, name=name)
     else:
         ret = new_anime(url, 0, episode, name=name)
     return ret
@@ -134,16 +134,16 @@ def update():
     now = System.now()
     date_delta = today - last_time
     ret = ""
-    for j in range(0, date_delta.days + 1):
+    for j in range(0, date_delta.days + 2):
         day = (last_time + timedelta(days=j)).strftime('%Y-%m-%d')
-        data_list = Database.command(f'''SELECT * FROM anime_ongoing WHERE update_date <= '{day}' ''')
+        data_list = Database.command(f'''SELECT * FROM anime_ongoing WHERE update_date < '{day}' ''')
         for i in data_list:
             name, ep, latest, update_date, update_time, url = i
             update_datetime = datetime.datetime.combine(update_date, datetime.time(update_time))
             delta = (update_datetime - now).total_seconds()
-            if update_date == today:
+            if update_date >= today:
                 diff = round(delta / 3600)
-                if diff > 0:
+                if 24 > diff > 0:
                     append = "s" if diff > 1 else ""
                     ret += f"Anime \"{name}\" will have new episode in {diff} hour{append}.\n"
                     continue
