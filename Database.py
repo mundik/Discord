@@ -4,7 +4,7 @@ import mysql.connector
 def add_finished_anime(name, curr_ep, ep, url):
     conn, cur = connect()
     sql = f'''INSERT INTO anime_finished (name, current_ep, episodes, url) VALUES
-    ('{name}', {curr_ep}, {ep}, '{url}')'''
+    ("{name}", {curr_ep}, {ep}, "{url}")'''
     try:
         cur.execute(sql)
         if add_anime_list(cur, name, typ="finished"):
@@ -20,7 +20,7 @@ def add_finished_anime(name, curr_ep, ep, url):
 def add_ongoing_anime(url, name, ep, last, update_date, update_time):
     conn, cur = connect()
     sql = f'''INSERT INTO anime_ongoing (name, current_ep, latest_ep, update_date, update_time, url)
-VALUES('{name}', {ep}, {last}, '{update_date}', {update_time}, '{url}')'''
+VALUES("{name}", {ep}, {last}, '{update_date}', {update_time}, "{url}")'''
     try:
         cur.execute(sql)
         if add_anime_list(cur, name, typ="ongoing"):
@@ -34,7 +34,7 @@ VALUES('{name}', {ep}, {last}, '{update_date}', {update_time}, '{url}')'''
 
 
 def add_anime_list(cur, name, typ):
-    sql = f'''INSERT INTO anime_list(name, type) VALUES('{name}', '{typ}')'''
+    sql = f'''INSERT INTO anime_list(name, type) VALUES("{name}", "{typ}")'''
     try:
         cur.execute(sql)
         return True
@@ -45,7 +45,7 @@ def add_anime_list(cur, name, typ):
 
 def get_anime_type(name):
     conn, cur = connect()
-    sql = f'''SELECT type FROM anime_list where name LIKE '%{name}%' '''
+    sql = f'''SELECT type FROM anime_list where name LIKE "%{name}%" '''
     try:
         cur.execute(sql)
         ret = cur.fetchall()
@@ -62,9 +62,9 @@ def get_anime(name):
     conn, cur = connect()
     typ = get_anime_type(name)
     if typ == "ongoing":
-        sql = f'''SELECT "current_ep" FROM "anime_ongoing" where name LIKE '%{name}%' '''
+        sql = f'''SELECT "current_ep" FROM "anime_ongoing" where name LIKE "%{name}%" '''
     elif typ == "finished":
-        sql = f'''SELECT "current_ep" FROM "anime_finished" where name LIKE '%{name}%' '''
+        sql = f'''SELECT "current_ep" FROM "anime_finished" where name LIKE "%{name}%" '''
     else:
         return "", ""
     cur.execute(sql)

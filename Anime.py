@@ -8,19 +8,19 @@ def watched(name, add):
         name = " ".join(name)
     ep, typ = Database.get_anime(name)
     if len(ep) == 0:
-        return f"Anime '{name}' not found."
+        return f"Anime \"{name}\" not found."
     else:
         if isinstance(add, int):
             return f"{add} is not a number."
         ep = ep[0][0] + int(add)
         if typ == "ongoing":
-            sql = f'''UPDATE anime_ongoing SET current_ep = {ep} WHERE name LIKE '%{name}%' '''
+            sql = f'''UPDATE anime_ongoing SET current_ep = {ep} WHERE name LIKE "%{name}%" '''
         elif typ == "finished":
-            sql = f'''UPDATE anime_finished SET current_ep = {ep} WHERE name LIKE '%{name}%' '''
+            sql = f'''UPDATE anime_finished SET current_ep = {ep} WHERE name LIKE "%{name}%" '''
         else:
             return "Database Error."
         Database.command(sql)
-        return f"Anime '{name}' updated."
+        return f"Anime \"{name}\" updated."
 
 
 def new_anime_going(url, ep, last, update_date, update_time, name=None):
@@ -28,12 +28,12 @@ def new_anime_going(url, ep, last, update_date, update_time, name=None):
         name = System.parse_url(url)
     elif isinstance(name, tuple):
         name = " ".join(name)
-    find = Database.command(f'''SELECT * FROM anime_list where name LIKE '%{name}%' ''')
+    find = Database.command(f'''SELECT * FROM anime_list where name LIKE "%{name}%" ''')
     if len(find) != 0:
-        return "Anime already on list."
+        return f"Anime \"{name}\" already on list."
     else:
         if Database.add_ongoing_anime(url, name, ep, last, update_date, update_time):
-            return f"Anime '{name}' succesfully added."
+            return f"Anime \"{name}\" succesfully added."
         return "Database error."
 
 
@@ -42,12 +42,12 @@ def new_anime(url, ep, max_ep, name=None):
         name = System.parse_url(url)
     elif isinstance(name, tuple):
         name = " ".join(name)
-    find = Database.command(f'''SELECT * FROM anime_list where name LIKE '%{name}%' ''')
+    find = Database.command(f'''SELECT * FROM anime_list where name LIKE "%{name}%" ''')
     if len(find) != 0:
         return "Anime already on list."
     else:
         if Database.add_finished_anime(name, ep, max_ep, url):
-            return f"Anime '{name}' succesfully added."
+            return f"Anime \"{name}\" succesfully added."
         return "Database error."
 
 
@@ -64,32 +64,32 @@ def new_anime_url(url):
 def finished(name):
     if isinstance(name, tuple):
         name = " ".join(name)
-    typ = Database.command(f'''SELECT type FROM anime_list where name LIKE '%{name}%' ''')
+    typ = Database.get_anime_type(name)
     if len(typ) == 0:
         return "Anime not found."
     typ = typ[0][0]
     if typ == "ongoing":
-        sql = f'''DELETE FROM anime_ongoing where name LIKE '%{name}%' '''
+        sql = f'''DELETE FROM anime_ongoing where name LIKE "%{name}%" '''
     elif typ == "finished":
-        sql = f'''DELETE FROM anime_finished where name LIKE '%{name}%' '''
+        sql = f'''DELETE FROM anime_finished where name LIKE "%{name}%" '''
     else:
         return "Database Error"
     Database.command(sql)
-    Database.command(f'''DELETE FROM anime_list where name LIKE '%{name}%' ''')
-    return f"Anime '{name}' was removed from watchlist."
+    Database.command(f'''DELETE FROM anime_list where name LIKE "%{name}%" ''')
+    return f"Anime \"{name}\" was removed from watchlist."
 
 
 def transfer(name):
     if isinstance(name, tuple):
         name = " ".join(name)
-    data = Database.command(f'''SELECT * FROM anime_ongoing where name LIKE '%{name}%' ''')
+    data = Database.command(f'''SELECT * FROM anime_ongoing where name LIKE "%{name}%" ''')
     if len(data) > 0:
         data = data[0]
         finished(name)
         Database.add_finished_anime(data[0], data[1], data[2], data[5])
-        return f"Anime '{name}' transfered from ongoing to finished."
+        return f"Anime \"{name}\" transfered from ongoing to finished."
     else:
-        return f"Anime '{name}' not found."
+        return f"Anime \"{name}\" not found."
 
 
 def status():
@@ -116,15 +116,15 @@ def waiting():
     for i in data_list:
         diff = i[2] - i[1]
         append = "s" if diff > 1 else ""
-        ret += f"Anime {i[0]} have {diff} unwatched episode{append}.\n"
+        ret += f"Anime \"{i[0]}\" have {diff} unwatched episode{append}.\n"
     return ret
 
 
 def change_time(name, hour):
     if isinstance(name, tuple):
         name = " ".join(name)
-    Database.command(f'''UPDATE anime_ongoing SET update_time = {hour} WHERE name LIKE '%{name}%' ''')
-    return f"Anime '{name}' update time set to {hour}:00"
+    Database.command(f'''UPDATE anime_ongoing SET update_time = {hour} WHERE name LIKE "%{name}%" ''')
+    return f"Anime \"{name}\" update time set to {hour}:00"
 
 
 def update():

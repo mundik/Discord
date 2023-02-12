@@ -1,6 +1,7 @@
 from datetime import *
 import requests
 import re
+import html
 
 import Database
 
@@ -77,11 +78,14 @@ def parse_url(url):
 
 
 def parse_page(url):
-    html = requests.get(url).text
-    name = re.findall("<title> (.*?) - AnimeDao</title>", html)[0]
-    anime_type = re.findall('Status:</b></td><td class="align-middle">(.*?)</td>', html)[0]
-    episode = re.findall('Episode (\d+)', html)[0]
-    remain = re.findall('(\d+) \S+(?: \S+ (\d+) \S+)? left', html)[0]
+    page_html = html.unescape(requests.get(url).text)
+    name = re.findall("<title> (.*?) - AnimeDao</title>", page_html)[0]
+    anime_type = re.findall('Status:</b></td><td class="align-middle">(.*?)</td>', page_html)[0]
+    episode = re.findall('Episode (\d+)', page_html)[0]
+    try:
+        remain = re.findall('(\d+) \S+(?: \S+ (\d+) \S+)? left', page_html)[0]
+    except IndexError:
+        remain = "0"
     return name, anime_type, episode, remain
 
 
