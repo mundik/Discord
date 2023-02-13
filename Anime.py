@@ -7,13 +7,14 @@ import Database
 def watched(name, add):
     if isinstance(name, tuple):
         name = " ".join(name)
-    ep, typ = Database.get_anime(name)
-    if len(ep) == 0:
+    ret, typ = Database.get_anime(name)
+    if len(ret) == 0:
         return f"Anime \"{name}\" not found."
     else:
         if isinstance(add, int):
             return f"{add} is not a number."
-        ep = ep[0][0] + int(add)
+        full_name, ep = ret[0]
+        ep += + int(add)
         if typ == "ongoing":
             sql = f'''UPDATE anime_ongoing SET current_ep = {ep} WHERE name LIKE "%{name}%" '''
         elif typ == "finished":
@@ -21,7 +22,7 @@ def watched(name, add):
         else:
             return "Database Error."
         Database.command(sql)
-        return f"Anime \"{name}\" updated."
+        return f"Anime \"{full_name}\" updated."
 
 
 def new_anime_going(url, ep, last, update_date, update_time, name=None):
