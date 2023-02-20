@@ -160,8 +160,11 @@ def update():
                         latest += 1
                     update_date += timedelta(days=7)
                 diff = latest - old
-                append = "s" if diff > 1 else ""
-                ret += f"Anime \"{name}\" have {diff} new episode{append}.\n"
+                if diff == 0:
+                    ret += f"Anime \"{name}\" don't have any new episode.\n"
+                else:
+                    append = "s" if diff > 1 else ""
+                    ret += f"Anime \"{name}\" have {diff} new episode{append}.\n"
                 Database.command(f'''UPDATE anime_ongoing SET latest_ep = {latest}, update_date = '{update_date}'
                                      WHERE name LIKE "%{name}%" ''')
     if last_time != today:
