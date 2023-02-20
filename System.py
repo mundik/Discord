@@ -80,7 +80,7 @@ def parse_page(url):
     page_html = html.unescape(requests.get(url).text)
     name = re.findall("<title> (.*?) - AnimeDao</title>", page_html)[0]
     anime_type = re.findall('Status:</b></td><td class="align-middle">(.*?)</td>', page_html)[0]
-    episode = re.findall('Episode (\d+)', page_html)[0]
+    episode = len(re.findall('Episode (\d+)', page_html))//3
     try:
         remain = re.findall('\d+', re.findall('\d+ \S+(?: \S+ \d+ \S+)? left', page_html)[0])
     except IndexError:
