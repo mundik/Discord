@@ -19,10 +19,6 @@ def date_work():
     return workout_date
 
 
-def strp(input_date):
-    return datetime.strptime(input_date, '%Y-%m-%d').date()
-
-
 def datewrite(typ, add):
     sql = f'''SELECT date from System_time WHERE type='{typ}' '''
     get_date = (Database.command(sql)[0][0])
@@ -48,18 +44,6 @@ def time_to_human(input_time):
     return ", ".join(strings)
 
 
-def days_to_human(string):
-    string = string.replace("_", " ")
-    string = string.replace("Mon", "Monday")
-    string = string.replace("Tue", "Tuesday")
-    string = string.replace("Wed", "Wednesday")
-    string = string.replace("Thu", "Thursday")
-    string = string.replace("Fri", "Friday")
-    string = string.replace("Sat", "Saturday")
-    string = string.replace("Sun", "Sunday")
-    return string
-
-
 def add_time(input_time, delta):
     if len(delta) == 2:
         input_time += timedelta(days=int(delta.pop(0)))
@@ -83,4 +67,25 @@ def parse_page(url):
     return name, anime_type, episode, remain
 
 
-workout_begin = date(year=2023, month=1, day=1)
+workout_begin = datetime(year=2023, month=1, day=1)
+
+
+def split_lines(data):
+    if len(data) < 2000:
+        return data
+    else:
+        ret = []
+        while len(data) >= 2000:
+            split_num = 1
+            split = data.rsplit("\n", split_num)
+            while len(split[0]) >= 2000:
+                split_num += 1
+                split = data.rsplit("\n", split_num)
+            ret.append(split[0])
+            data = data.replace(split[0] + "\n", "")
+        ret.append(data)
+        return ret
+
+
+
+

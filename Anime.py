@@ -1,4 +1,3 @@
-import datetime
 from datetime import timedelta
 import System
 import Database
@@ -73,13 +72,12 @@ def finished(name):
     typ = Database.get_anime_type(name)
     if len(typ) == 0:
         return "Anime not found."
-    typ = typ[0][0]
     if typ == "ongoing":
         sql = f'''DELETE FROM anime_ongoing where name LIKE "%{name}%" '''
     elif typ == "finished":
         sql = f'''DELETE FROM anime_finished where name LIKE "%{name}%" '''
     else:
-        return "Database Error"
+        return f"Database Error: type: {typ}"
     Database.command(sql)
     Database.command(f'''DELETE FROM anime_list where name LIKE "%{name}%" ''')
     return f"Anime \"{name}\" was removed from watchlist."
@@ -105,14 +103,8 @@ def status():
         ret += f"Name: {i[0]}, Episode: {i[1]} out of {i[2]} \n"
     data_list = Database.command(f'''SELECT * FROM anime_ongoing ORDER BY update_time''')
     for i in data_list:
-        ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%A')} at {i[4]}:00\n"
-    if len(ret) > 2000:
-        mid = int(len(ret) / 2)
-        about_mid = mid + ret[mid:].index('\n')
-        data = ret[:about_mid], ret[about_mid + 1:]
-        return data
-    else:
-        return ret
+        ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%A')} at {i[3].strftime('%H')}:00\n<{i[4]}>\n"
+    return ret
 
 
 def waiting():
@@ -151,6 +143,8 @@ def update():
                 if not int(System.parse_page(url)[2]) > latest:
                     ret += f"Anime \"{name}\" will have new episode within hour.\n"
                     continue
+                else:
+                    update_time = now
         if update_time <= now:
             released = int(System.parse_page(url)[2])
             old = latest
@@ -164,6 +158,5 @@ def update():
             else:
                 append = "s" if diff > 1 else ""
                 ret += f"Anime \"{name}\" have {diff} new episode{append}.\n"
-            Database.command(f'''UPDATE anime_ongoing SET latest_ep = {latest}, update_time = '{update_time}'
-                                 WHERE name LIKE "%{name}%" ''')
+            Database.command(f'''UPDATE anime_ongoing SET latest_ep = {latest} WHERE name LIKE "%{name}%"''')
     return ret
