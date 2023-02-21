@@ -79,31 +79,29 @@ async def anime(ctx, *args):
             if len(args) >= 6 else Guide.anime_add_going
     elif func == "finished" or func == "f":
         data = Anime.finished(args[1:]) if len(args) >= 2 else Guide.anime_finished
-    elif func == "url":
+    elif func == "add_url":
         data = Anime.new_anime_url(args[1])
     elif func == "status" or func == "stat":
         data = Anime.status()
-        if type(data) == str:
-            if data == "":
-                data = "No anime in database"
-        else:
-            for i in data:
-                await ctx.send(i)
-                return
+        data = "No anime in database" if data == "" else data
     elif func == "waiting" or func == "wait":
         data = Anime.waiting()
         data = "Nothing on waitlist" if data == "" else data
     elif func == "update" or func == "u":
         data = Anime.update()
         data = "Nothing to update" if data == "" else data
-
     elif func == "transfer" or func == "t":
         data = Anime.transfer(args[1:]) if len(args) >= 2 else Guide.anime_transfer
     elif func == "change":
         data = Anime.change_time(args[1:-1], args[-1]) if len(args) >= 3 else Guide.anime_change
     else:
         data = Guide.anime_wrong_function
-    await ctx.send(data)
+    data = System.split_lines(data)
+    if type(data) == str:
+        await ctx.send(data)
+    else:
+        for i in data:
+            await ctx.send(i)
 
 
 @bot.command()
