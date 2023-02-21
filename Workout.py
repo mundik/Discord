@@ -3,11 +3,11 @@ import Database
 
 
 def check():
-    today = System.today()
+    now = System.now()
     begin = System.workout_begin
     data = Database.command(f'''SELECT * FROM Workout ''')[0]
     date = System.date_work()
-    delta = (today - date).days
+    delta = (now - date).days
     if delta > 0:
         number = data[1]
         for i in range(delta):
