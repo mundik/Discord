@@ -17,10 +17,10 @@ def add_finished_anime(name, curr_ep, ep, url):
         disconnect(conn)
 
 
-def add_ongoing_anime(url, name, ep, last, update_date, update_time):
+def add_ongoing_anime(url, name, ep, last, update_time):
     conn, cur = connect()
-    sql = f'''INSERT INTO anime_ongoing (name, current_ep, latest_ep, update_date, update_time, url)
-VALUES("{name}", {ep}, {last}, '{update_date}', {update_time}, "{url}")'''
+    sql = f'''INSERT INTO anime_ongoing (name, current_ep, latest_ep, update_time, url)
+VALUES("{name}", {ep}, {last}, '{update_time}', "{url}")'''
     try:
         cur.execute(sql)
         if add_anime_list(cur, name, typ="ongoing"):

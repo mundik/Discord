@@ -14,11 +14,6 @@ def today():
     return date.today()
 
 
-def date_anime():
-    anime_date = (Database.command(f'''SELECT date from System_time WHERE type='anime' ''')[0][0])
-    return anime_date
-
-
 def date_work():
     workout_date = (Database.command(f'''SELECT date from System_time WHERE type='workout' ''')[0][0])
     return workout_date
