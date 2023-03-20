@@ -10,10 +10,10 @@ def watched(name, add):
     if len(ret) == 0:
         return f"Anime \"{name}\" not found."
     else:
-        if isinstance(add, int):
+        if not isinstance(add, int):
             return f"{add} is not a number."
         full_name, ep = ret[0]
-        ep += + int(add)
+        ep += + add
         if typ == "ongoing":
             sql = f'''UPDATE anime_ongoing SET current_ep = {ep} WHERE name LIKE "%{name}%" '''
         elif typ == "finished":
@@ -104,6 +104,7 @@ def status():
     data_list = Database.command(f'''SELECT * FROM anime_ongoing ORDER BY update_time''')
     for i in data_list:
         ret += f"Name: {i[0]}, Episode: {i[1]}, Last episode: {i[2]}, Airing in {i[3].strftime('%A')} at {i[3].strftime('%H')}:00\n<{i[4]}>\n"
+    ret = "No anime in database" if ret == "" else ret
     return ret
 
 
@@ -115,6 +116,7 @@ def waiting():
         diff = i[2] - i[1]
         append = "s" if diff > 1 else ""
         ret += f"Anime \"{i[0]}\" have {diff} unwatched episode{append}.\n"
+    ret = "Nothing on waitlist" if ret == "" else ret
     return ret
 
 
@@ -133,7 +135,8 @@ def update():
     for i in data_list:
         name, ep, latest, update_time, url = i
         delta = (update_time - now).total_seconds()
-        if update_time >= now:
+        temp_update = update_time
+        if temp_update >= now:
             diff = round(delta / 3600)
             if 24 > diff > 0:
                 append = "s" if diff > 1 else ""
@@ -144,8 +147,8 @@ def update():
                     ret += f"Anime \"{name}\" will have new episode within hour.\n"
                     continue
                 else:
-                    update_time = now
-        if update_time <= now:
+                    temp_update = now
+        if temp_update <= now:
             released = int(System.parse_page(url)[2])
             old = latest
             while update_time <= now:
@@ -158,5 +161,6 @@ def update():
             else:
                 append = "s" if diff > 1 else ""
                 ret += f"Anime \"{name}\" have {diff} new episode{append}.\n"
-            Database.command(f'''UPDATE anime_ongoing SET latest_ep = {latest} WHERE name LIKE "%{name}%"''')
+            Database.command(f'''UPDATE anime_ongoing SET latest_ep = {latest}, update_time = '{update_time}' WHERE name LIKE "%{name}%"''')
+    ret = "Nothing to update" if ret == "" else ret
     return ret
