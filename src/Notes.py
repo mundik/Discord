@@ -1,9 +1,11 @@
+from builtins import str
+
 import Database
-from datetime import datetime
+from datetime import *
 import System
 
 
-def add_note(name, input_date, input_time, text):
+def add_note(name: str, input_date: str, input_time: str, text: str) -> str | tuple[str, int]:
     timestamp = datetime.strptime(f'{input_date} {input_time}', '%d.%m.%Y %H:%M')
     now = System.now()
     if timestamp < now:
@@ -21,7 +23,7 @@ def add_note(name, input_date, input_time, text):
                f'{System.time_to_human(sec)}', sec
 
 
-def show_note():
+def show_note() -> str:
     notes = Database.command('''SELECT * FROM notes''')
     if len(notes) == 0:
         return "No notes in database."
@@ -37,12 +39,12 @@ def show_note():
         return ret
 
 
-def delete_note(name):
+def delete_note(name: str) ->str:
     Database.command(f'''DELETE FROM notes where name='{name}' ''')
     return f"Note {name} successfully deleted"
 
 
-def clear_due():
+def clear_due() -> None:
     notes = Database.command('''SELECT * FROM notes''')
     for i in notes:
         if i[1] < datetime.time(System.now()) and i[2] == System.today() or i[2] < System.today():

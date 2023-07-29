@@ -1,9 +1,8 @@
 Scripts
 __pycache__
 .idea/*
-.heroku-netrc
 *.txt
 *.iml
-Anime.py.old
+*.env
 Database_backup/
-/venv/
+Discord_venv

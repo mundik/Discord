@@ -1,6 +1,5 @@
 from discord.ext import commands
 import discord
-import os
 import Workout
 import Anime
 import System
@@ -8,8 +7,8 @@ import Notes
 import Guide
 import time as Time
 
-TOKEN = os.environ.get("BOT")
-GUILD = os.environ.get("GUILD")
+TOKEN = System.credentials("DISCORD_BOT")
+GUILD = System.credentials("DISCORD_GUILD")
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)

@@ -2,7 +2,7 @@ import System
 import Database
 
 
-def check():
+def check() -> None:
     now = System.now()
     begin = System.workout_begin
     data = Database.command(f'''SELECT * FROM Workout ''')[0]
@@ -15,10 +15,10 @@ def check():
         Database.command(f"UPDATE Workout SET value = {str(number)} WHERE name like 'push'")
         # elif i[0] == 'run':
         # Database.command(f'''UPDATE Workout SET value = {i[1] + delta * 250} WHERE name = 'run' ''')
-        System.datewrite("workout", delta)
+        System.date_write("workout", delta)
 
 
-def substract(option, num):
+def substract(option: str, num: int) -> str | int:
     check()
     data = Database.command(f'''SELECT * FROM Workout ''')
     for i in data:
